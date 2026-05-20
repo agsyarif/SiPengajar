@@ -3,7 +3,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import * as Accordion from "@radix-ui/react-accordion";
-import { Sparkles, Check, ChevronDown, Zap } from "lucide-react";
+import { Sparkles, Check, ChevronDown, Zap, ChevronRight } from "lucide-react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -97,37 +98,51 @@ function formatPrice(price: number) {
   return `Rp ${(price / 1000).toFixed(0)}rb`;
 }
 
-export default function HargaPage() {
+function HargaPageContent() {
   const [period, setPeriod] = useState<Period>("bulanan");
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navbar minimal */}
+      {/* Navbar */}
       <header className="border-b border-stone-100 sticky top-0 bg-white/95 backdrop-blur-sm z-40">
-        <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-6 h-6 bg-teal-600 rounded flex items-center justify-center">
               <Sparkles size={13} className="text-white" />
             </div>
             <span className="font-display font-semibold text-base text-stone-900">
-              AjarAI
+              SiPengajar
             </span>
           </Link>
           <div className="flex items-center gap-3">
-            <Button variant="ghost-stone" size="sm" asChild>
-              <Link href="/login">Masuk</Link>
-            </Button>
-            <Button variant="primary" size="sm" asChild>
-              <Link href="/register">Daftar Gratis</Link>
-            </Button>
+            {isLoggedIn ? (
+              <Button variant="primary" size="sm" asChild>
+                <Link href="/dashboard">
+                  Dashboard <ChevronRight size={13} />
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost-stone" size="sm" asChild>
+                  <Link href="/login">Masuk</Link>
+                </Button>
+                <Button variant="primary" size="sm" asChild>
+                  <Link href="/register">Daftar Gratis</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-6 py-16">
         {/* Header */}
         <div className="text-center mb-12">
-          <Badge variant="teal" className="mb-4">Harga Transparan</Badge>
+          <Badge variant="teal" className="mb-4">
+            Harga Transparan
+          </Badge>
           <h1 className="font-display text-4xl font-bold text-stone-900 mb-4">
             Pilih paket yang tepat untuk kamu
           </h1>
@@ -141,21 +156,25 @@ export default function HargaPage() {
               onClick={() => setPeriod("bulanan")}
               className={cn(
                 "text-sm font-medium transition-colors",
-                period === "bulanan" ? "text-stone-900" : "text-stone-400"
+                period === "bulanan" ? "text-stone-900" : "text-stone-400",
               )}
             >
               Bulanan
             </button>
             <button
-              onClick={() => setPeriod(p => p === "bulanan" ? "tahunan" : "bulanan")}
+              onClick={() =>
+                setPeriod((p) => (p === "bulanan" ? "tahunan" : "bulanan"))
+              }
               className={cn(
                 "relative w-11 h-6 rounded-full transition-colors",
-                period === "tahunan" ? "bg-teal-600" : "bg-stone-200"
+                period === "tahunan" ? "bg-teal-600" : "bg-stone-200",
               )}
             >
               <motion.div
                 className="absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm"
-                animate={{ left: period === "tahunan" ? "calc(100% - 20px)" : "4px" }}
+                animate={{
+                  left: period === "tahunan" ? "calc(100% - 20px)" : "4px",
+                }}
                 transition={{ type: "spring", stiffness: 500, damping: 35 }}
               />
             </button>
@@ -163,7 +182,7 @@ export default function HargaPage() {
               onClick={() => setPeriod("tahunan")}
               className={cn(
                 "text-sm font-medium transition-colors flex items-center gap-2",
-                period === "tahunan" ? "text-stone-900" : "text-stone-400"
+                period === "tahunan" ? "text-stone-900" : "text-stone-400",
               )}
             >
               Tahunan
@@ -189,7 +208,8 @@ export default function HargaPage() {
         {/* Pricing cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
           {PLANS.map((plan) => {
-            const price = period === "bulanan" ? plan.priceMonthly : plan.priceYearly;
+            const price =
+              period === "bulanan" ? plan.priceMonthly : plan.priceYearly;
             return (
               <motion.div
                 key={plan.id}
@@ -197,7 +217,7 @@ export default function HargaPage() {
                 className={cn(
                   "relative rounded-xl p-6 flex flex-col",
                   plan.cardClass,
-                  plan.highlight && "shadow-md"
+                  plan.highlight && "shadow-md",
                 )}
               >
                 {plan.badge && (
@@ -209,10 +229,14 @@ export default function HargaPage() {
                 )}
 
                 <div className="mb-5">
-                  <p className={cn(
-                    "text-xs font-semibold uppercase tracking-wide mb-1",
-                    plan.id === "sekolah" ? "text-violet-600" : "text-teal-600"
-                  )}>
+                  <p
+                    className={cn(
+                      "text-xs font-semibold uppercase tracking-wide mb-1",
+                      plan.id === "sekolah"
+                        ? "text-violet-600"
+                        : "text-teal-600",
+                    )}
+                  >
                     {plan.name}
                   </p>
                   <p className="text-stone-500 text-sm mb-4">{plan.desc}</p>
@@ -231,33 +255,40 @@ export default function HargaPage() {
                       </motion.span>
                     </AnimatePresence>
                     {price > 0 && (
-                      <span className="text-stone-400 text-sm mb-0.5">/bulan</span>
+                      <span className="text-stone-400 text-sm mb-0.5">
+                        /bulan
+                      </span>
                     )}
                   </div>
                   {period === "tahunan" && price > 0 && (
                     <p className="text-2xs text-stone-400 mt-1">
-                      Ditagih tahunan · Hemat Rp {((plan.priceMonthly - price) * 12 / 1000).toFixed(0)}rb/tahun
+                      Ditagih tahunan · Hemat Rp{" "}
+                      {(((plan.priceMonthly - price) * 12) / 1000).toFixed(0)}
+                      rb/tahun
                     </p>
                   )}
                 </div>
 
                 <ul className="space-y-2.5 mb-6 flex-1">
                   {plan.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-sm text-stone-700">
+                    <li
+                      key={f}
+                      className="flex items-center gap-2 text-sm text-stone-700"
+                    >
                       <Check
                         size={14}
-                        className={plan.id === "sekolah" ? "text-violet-500 flex-shrink-0" : "text-teal-500 flex-shrink-0"}
+                        className={
+                          plan.id === "sekolah"
+                            ? "text-violet-500 flex-shrink-0"
+                            : "text-teal-500 flex-shrink-0"
+                        }
                       />
                       {f}
                     </li>
                   ))}
                 </ul>
 
-                <Button
-                  variant={plan.ctaVariant}
-                  className="w-full"
-                  asChild
-                >
+                <Button variant={plan.ctaVariant} className="w-full" asChild>
                   <Link href={plan.id === "sekolah" ? "#kontak" : "/register"}>
                     {plan.cta}
                   </Link>
@@ -300,13 +331,25 @@ export default function HargaPage() {
       {/* Footer strip */}
       <footer className="border-t border-stone-100 mt-16">
         <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between text-2xs text-stone-400">
-          <span>© 2025 AjarAI · Untuk guru Indonesia</span>
+          <span>© 2025 SiPengajar · Untuk guru Indonesia</span>
           <div className="flex gap-4">
-            <Link href="#" className="hover:text-stone-600">Privasi</Link>
-            <Link href="#" className="hover:text-stone-600">Syarat</Link>
+            <Link href="#" className="hover:text-stone-600">
+              Privasi
+            </Link>
+            <Link href="#" className="hover:text-stone-600">
+              Syarat
+            </Link>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function HargaPage() {
+  return (
+    <SessionProvider>
+      <HargaPageContent />
+    </SessionProvider>
   );
 }

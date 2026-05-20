@@ -34,12 +34,15 @@ export function FadeIn({
 export function FadeInStagger({
   children,
   staggerDelay = 0.07,
+  className,
 }: {
   children: React.ReactNode;
   staggerDelay?: number;
+  className?: string;
 }) {
   return (
     <motion.div
+      className={className}
       variants={{
         hidden: {},
         show: { transition: { staggerChildren: staggerDelay } },

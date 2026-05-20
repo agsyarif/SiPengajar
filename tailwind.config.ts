@@ -61,8 +61,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["Plus Jakarta Sans", "sans-serif"],
-        sans: ["Geist", "DM Sans", "sans-serif"],
+        display: ["DM Serif Display", "Georgia", "serif"],
+        sans: ["DM Sans", "sans-serif"],
         mono: ["Geist Mono", "monospace"],
       },
       fontSize: {

@@ -4,7 +4,7 @@ import { Sparkles } from "lucide-react";
 
 const TESTIMONIAL = {
   quote:
-    "AjarAI menghemat waktu saya 5–6 jam setiap minggu. Sekarang bisa fokus ke murid, bukan ke dokumen.",
+    "SiPengajar menghemat waktu saya 5–6 jam setiap minggu. Sekarang bisa fokus ke murid, bukan ke dokumen.",
   name: "Ibu Sari Wulandari, S.Pd.",
   role: "Guru Matematika · SMP N 3 Yogyakarta",
   initial: "S",
@@ -21,7 +21,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
             <Sparkles size={13} className="text-white" />
           </div>
           <span className="font-display font-semibold text-base text-stone-900">
-            AjarAI
+            SiPengajar
           </span>
         </Link>
 

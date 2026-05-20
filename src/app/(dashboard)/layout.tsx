@@ -17,7 +17,7 @@ export default async function DashboardLayout({
       <div className="flex min-h-screen bg-stone-50">
         <Sidebar />
         <main className="flex-1 min-h-screen transition-[margin] duration-300" style={{ marginLeft: "var(--sidebar-w, 240px)" }}>
-          <div className="max-w-[720px] mx-auto px-8 py-8">
+          <div className="max-w-4xl mx-auto px-8 py-8">
             <PageTransition>{children}</PageTransition>
           </div>
         </main>

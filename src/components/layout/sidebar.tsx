@@ -4,9 +4,16 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
-  LayoutDashboard, Plus, FileText, BookOpen,
-  CreditCard, Settings, LogOut, Sparkles,
-  ChevronLeft, ChevronRight,
+  LayoutDashboard,
+  Plus,
+  FileText,
+  BookOpen,
+  CreditCard,
+  Settings,
+  LogOut,
+  Sparkles,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -16,11 +23,11 @@ const W_COLLAPSED = 64;
 const STORAGE_KEY = "sidebar-collapsed";
 
 const navItems = [
-  { href: "/dashboard",   label: "Dashboard",    icon: LayoutDashboard },
-  { href: "/modul",       label: "Semua Modul",  icon: FileText },
-  { href: "/template",    label: "Template",     icon: BookOpen },
-  { href: "/billing",     label: "Billing",      icon: CreditCard },
-  { href: "/pengaturan",  label: "Pengaturan",   icon: Settings },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/modul", label: "Semua Modul", icon: FileText },
+  { href: "/template", label: "Template", icon: BookOpen },
+  { href: "/billing", label: "Billing", icon: CreditCard },
+  { href: "/pengaturan", label: "Pengaturan", icon: Settings },
 ];
 
 export function Sidebar() {
@@ -34,7 +41,10 @@ export function Sidebar() {
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) === "true";
     setCollapsed(stored);
-    document.documentElement.style.setProperty("--sidebar-w", `${stored ? W_COLLAPSED : W_EXPANDED}px`);
+    document.documentElement.style.setProperty(
+      "--sidebar-w",
+      `${stored ? W_COLLAPSED : W_EXPANDED}px`,
+    );
     setMounted(true);
   }, []);
 
@@ -42,7 +52,10 @@ export function Sidebar() {
     setCollapsed((prev) => {
       const next = !prev;
       localStorage.setItem(STORAGE_KEY, String(next));
-      document.documentElement.style.setProperty("--sidebar-w", `${next ? W_COLLAPSED : W_EXPANDED}px`);
+      document.documentElement.style.setProperty(
+        "--sidebar-w",
+        `${next ? W_COLLAPSED : W_EXPANDED}px`,
+      );
       return next;
     });
   };
@@ -58,7 +71,10 @@ export function Sidebar() {
     >
       {/* ── Logo + Collapse toggle ── */}
       <div className="h-14 flex items-center px-3 border-b border-stone-200 shrink-0 gap-2">
-        <Link href="/dashboard" className="flex items-center gap-2 min-w-0 flex-1">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 min-w-0 flex-1"
+        >
           <div className="w-6 h-6 bg-teal-600 rounded flex items-center justify-center shrink-0">
             <Sparkles size={13} className="text-white" />
           </div>
@@ -72,7 +88,7 @@ export function Sidebar() {
                 transition={{ duration: 0.18 }}
                 className="font-display font-semibold text-base text-stone-900 whitespace-nowrap overflow-hidden"
               >
-                AjarAI
+                SiPengajar
               </motion.span>
             )}
           </AnimatePresence>
@@ -172,7 +188,9 @@ export function Sidebar() {
             >
               <div className="rounded-lg bg-stone-100 p-3">
                 <div className="flex justify-between items-center mb-1.5">
-                  <span className="text-xs text-stone-600">Gratis · 3/5 modul</span>
+                  <span className="text-xs text-stone-600">
+                    Gratis · 3/5 modul
+                  </span>
                 </div>
                 <div className="h-1 bg-stone-200 rounded-full mb-2">
                   <motion.div
@@ -194,7 +212,12 @@ export function Sidebar() {
         </AnimatePresence>
 
         {/* User row */}
-        <div className={cn("flex items-center gap-2 px-1", collapsed && "justify-center")}>
+        <div
+          className={cn(
+            "flex items-center gap-2 px-1",
+            collapsed && "justify-center",
+          )}
+        >
           <div className="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center text-xs font-medium text-teal-700 shrink-0">
             {session?.user?.name?.[0]?.toUpperCase() ?? "G"}
           </div>
@@ -222,7 +245,6 @@ export function Sidebar() {
             )}
           </AnimatePresence>
         </div>
-
       </div>
     </motion.aside>
   );

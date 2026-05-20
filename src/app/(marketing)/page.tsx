@@ -1,14 +1,23 @@
 "use client";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { SessionProvider, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SpringHoverCard } from "@/components/motion/spring-hover";
 import {
-  Sparkles, FileText, Download, CheckCircle2,
-  Star, BookOpen, Zap, Layers, GraduationCap,
-  ChevronRight, Check,
+  Sparkles,
+  FileText,
+  Download,
+  CheckCircle2,
+  Star,
+  BookOpen,
+  Zap,
+  Layers,
+  GraduationCap,
+  ChevronRight,
+  Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -62,26 +71,134 @@ function WavyUnderline({ children }: { children: React.ReactNode }) {
 }
 
 // ── Hero mockup card ─────────────────────────────────────
-function HeroMockupCard() {
-  return (
-    <motion.div
-      animate={{ y: [0, -6, 0] }}
-      transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-      className="bg-white rounded-2xl border border-stone-200 shadow-modal p-5 w-full"
-    >
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <p className="text-2xs text-stone-400 font-medium uppercase tracking-wide">
-            Modul Ajar · Kelas 7 SMP
-          </p>
-          <p className="text-sm font-semibold text-stone-900 mt-0.5">
-            Persamaan Linear Satu Variabel
-          </p>
-        </div>
-        <Badge variant="success">Done</Badge>
-      </div>
+const TYPEWRITER_TEXT =
+  "Peserta didik dapat memahami konsep persamaan linear satu variabel dan menyelesaikan permasalahan kontekstual dalam kehidupan nyata.";
 
-      <div className="space-y-0 mb-4">
+function HeroMockupCard() {
+  const [displayed, setDisplayed] = useState("");
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const startDelay = setTimeout(() => setStarted(true), 1200);
+    return () => clearTimeout(startDelay);
+  }, []);
+
+  useEffect(() => {
+    if (!started) return;
+    if (displayed.length >= TYPEWRITER_TEXT.length) return;
+    const t = setTimeout(
+      () => setDisplayed(TYPEWRITER_TEXT.slice(0, displayed.length + 1)),
+      28,
+    );
+    return () => clearTimeout(t);
+  }, [started, displayed]);
+
+  const chips = [
+    {
+      emoji: "⚡",
+      label: "Dibuat dalam 8 detik",
+      bg: "#eef8f3",
+      delay: 0.9,
+      pos: "-top-5 -left-12",
+    },
+    {
+      emoji: "📄",
+      label: "Siap cetak & upload",
+      bg: "#fff7e6",
+      delay: 1.1,
+      pos: "bottom-10 -right-14",
+    },
+    {
+      emoji: "✅",
+      label: "Sesuai Kurikulum Merdeka",
+      bg: "#f0f4ff",
+      delay: 1.3,
+      pos: "-bottom-5 left-8",
+    },
+  ];
+
+  return (
+    <div className="relative">
+      {/* Decorative blobs */}
+      <motion.div
+        aria-hidden
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: 260,
+          height: 260,
+          background: "#3aa872",
+          filter: "blur(40px)",
+          opacity: 0.28,
+          top: -60,
+          right: -60,
+        }}
+        animate={{ scale: [1, 1.1, 1], x: [0, 10, 0], y: [0, -10, 0] }}
+        transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }}
+      />
+      <motion.div
+        aria-hidden
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: 180,
+          height: 180,
+          background: "#a8d8c2",
+          filter: "blur(40px)",
+          opacity: 0.28,
+          bottom: -40,
+          left: -40,
+        }}
+        animate={{ scale: [1, 1.08, 1], x: [0, -8, 0], y: [0, 8, 0] }}
+        transition={{ repeat: Infinity, duration: 9, ease: "easeInOut" }}
+      />
+
+      {/* Floating chips */}
+      {chips.map((chip) => (
+        <motion.div
+          key={chip.label}
+          className={`absolute z-10 flex items-center gap-2 bg-white rounded-xl px-3 py-2 text-xs font-medium text-[#144830] border border-[rgba(26,92,58,0.06)] shadow-[0_8px_24px_rgba(13,51,38,0.12)] whitespace-nowrap ${chip.pos}`}
+          initial={{ opacity: 0, scale: 0.8, y: 8 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{
+            delay: chip.delay,
+            type: "spring",
+            stiffness: 300,
+            damping: 22,
+          }}
+        >
+          <span
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
+            style={{ background: chip.bg }}
+          >
+            {chip.emoji}
+          </span>
+          {chip.label}
+        </motion.div>
+      ))}
+
+      {/* Main floating card */}
+      <motion.div
+        animate={{ y: [0, -14, 0] }}
+        transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+        className="relative z-[2] bg-white rounded-2xl border border-[rgba(26,92,58,0.07)] p-7 w-[380px] shadow-[0_32px_80px_rgba(13,51,38,0.14),0_8px_24px_rgba(13,51,38,0.08)]"
+      >
+        {/* Card header */}
+        <div className="flex items-start justify-between mb-5">
+          <div>
+            <p className="text-[10.5px] font-semibold uppercase tracking-wider text-stone-400 mb-1">
+              Modul Ajar · Kelas 7 SMP
+            </p>
+            <p className="font-serif text-[17px] text-stone-900 leading-snug">
+              Persamaan Linear Satu Variabel
+            </p>
+          </div>
+          <span className="text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-100 px-3 py-1 rounded-full whitespace-nowrap">
+            Done ✓
+          </span>
+        </div>
+
+        <div className="h-px bg-[rgba(26,92,58,0.07)] mb-4" />
+
+        {/* Rows */}
         {[
           { label: "Mata Pelajaran", value: "Matematika" },
           { label: "Fase / Kelas", value: "Fase D · Kelas 7" },
@@ -90,60 +207,67 @@ function HeroMockupCard() {
         ].map(({ label, value }) => (
           <div
             key={label}
-            className="flex items-center justify-between py-1.5 border-b border-stone-100 last:border-0"
+            className="flex items-center justify-between py-2 border-b border-[rgba(26,92,58,0.05)] last:border-0"
           >
-            <span className="text-2xs text-stone-400">{label}</span>
-            <span className="text-xs font-medium text-stone-700">{value}</span>
+            <span className="text-[13px] text-stone-400">{label}</span>
+            <span className="text-[13px] font-medium text-stone-800">
+              {value}
+            </span>
           </div>
         ))}
-      </div>
 
-      <div className="bg-stone-50 rounded-lg p-3">
-        <p className="text-2xs font-medium text-stone-400 mb-1.5 uppercase tracking-wide">
+        {/* Goal section */}
+        <p className="text-[10px] font-bold uppercase tracking-widest text-teal-600 mt-5 mb-2.5">
           Tujuan Pembelajaran
         </p>
-        <p className="text-xs text-stone-700 leading-relaxed">
-          Peserta didik dapat memahami konsep persamaan linear satu variabel
-          dan menyelesaikan permasalahan...
-        </p>
-        <p className="text-xs text-stone-700 mt-1 flex items-center">
-          menerapkan dalam konteks nyata
+        <p className="text-[13.5px] text-stone-600 leading-relaxed mb-5 min-h-[60px]">
+          {displayed}
           <motion.span
-            className="inline-block w-0.5 h-3.5 bg-teal-600 ml-0.5"
+            className="inline-block w-0.5 h-3.5 bg-teal-600 align-middle ml-0.5"
             animate={{ opacity: [1, 0] }}
-            transition={{ repeat: Infinity, duration: 0.9, ease: [0, 0, 1, 1] }}
+            transition={{ repeat: Infinity, duration: 0.8, ease: [0, 0, 1, 1] }}
           />
         </p>
-      </div>
 
-      <div className="flex items-center gap-2 mt-3">
-        <div className="flex-1 h-1 bg-stone-100 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-teal-600 rounded-full"
-            initial={{ width: "0%" }}
-            animate={{ width: "100%" }}
-            transition={{ duration: 2, delay: 0.4, ease: "easeOut" }}
-          />
+        {/* Progress bar */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-[5px] bg-teal-100 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-teal-500 to-teal-400 rounded-full"
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{
+                duration: 1.4,
+                delay: 1.2,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
+            />
+          </div>
+          <span className="text-xs font-semibold text-teal-700">100%</span>
         </div>
-        <span className="text-2xs text-teal-600 font-medium">100%</span>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
 // ── Navbar ───────────────────────────────────────────────
 function Navbar() {
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
+
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-stone-200">
-      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-teal-600 rounded flex items-center justify-center">
-            <Sparkles size={13} className="text-white" />
+    <header className="sticky top-0 z-50 bg-stone-50/85 backdrop-blur-md border-b border-[rgba(26,92,58,0.08)]">
+      <div className="px-16 h-[68px] flex items-center justify-between max-w-[1280px] mx-auto">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-[34px] h-[34px] bg-teal-600 rounded-[10px] flex items-center justify-center">
+            <Sparkles size={16} className="text-white" />
           </div>
-          <span className="font-display font-semibold text-base text-stone-900">AjarAI</span>
+          <span className="font-sans font-semibold text-[17px] text-stone-800 tracking-tight">
+            SiPengajar
+          </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-9">
           {[
             { label: "Cara Kerja", href: "#how-it-works" },
             { label: "Fitur", href: "#features" },
@@ -153,23 +277,47 @@ function Navbar() {
             <Link
               key={label}
               href={href}
-              className="text-sm text-stone-600 hover:text-stone-900 transition-colors"
+              className="text-[14px] font-normal text-stone-600 hover:text-teal-700 transition-colors"
             >
               {label}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/login">Masuk</Link>
-          </Button>
-          <Button asChild size="sm">
-            <Link href="/register">
-              Coba Gratis
-              <ChevronRight size={13} />
-            </Link>
-          </Button>
+        <div className="flex items-center gap-5">
+          {isLoggedIn ? (
+            <Button
+              asChild
+              size="sm"
+              className="text-[14px] font-medium rounded-[10px]"
+            >
+              <Link href="/dashboard">
+                Dashboard
+                <ChevronRight size={13} />
+              </Link>
+            </Button>
+          ) : (
+            <>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="text-[14px] font-normal text-stone-600"
+              >
+                <Link href="/login">Masuk</Link>
+              </Button>
+              <Button
+                asChild
+                size="sm"
+                className="text-[14px] font-medium rounded-[10px]"
+              >
+                <Link href="/register">
+                  Coba Gratis
+                  <ChevronRight size={13} />
+                </Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
@@ -179,89 +327,130 @@ function Navbar() {
 // ── Hero ─────────────────────────────────────────────────
 function Hero() {
   return (
-    <section className="relative overflow-hidden bg-stone-50 min-h-[calc(100vh-56px)] flex flex-col justify-center">
-      {/* Dot grid background */}
+    <section className="relative overflow-hidden bg-stone-50 min-h-[calc(100vh-68px)] flex flex-col justify-center">
+      {/* Dot grid */}
       <div
         aria-hidden
-        className="absolute inset-0 opacity-35"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: "radial-gradient(circle, #C8C8C2 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, #1a5c3a18 1px, transparent 1px)",
           backgroundSize: "28px 28px",
         }}
       />
-      {/* Radial fade — focuses eye to center */}
+      {/* Bottom fade */}
       <div
         aria-hidden
-        className="absolute inset-0"
-        style={{
-          background: "radial-gradient(ellipse 80% 60% at 50% 40%, transparent 40%, #FAFAF9 100%)",
-        }}
-      />
-      {/* Bottom fade into next section */}
-      <div
-        aria-hidden
-        className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-50 to-transparent"
+        className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none"
       />
 
       {/* Content */}
-      <div className="relative max-w-6xl mx-auto px-6 py-16 w-full">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-
+      <div className="relative max-w-[1280px] mx-auto px-16 pt-[52px] pb-20 w-full">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
           {/* Left — copy */}
-          <div>
+          <div className="flex flex-col gap-0">
+            {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 28,
+                delay: 0.2,
+              }}
+              className="inline-flex items-center gap-2 bg-teal-50 border border-teal-100 text-teal-700 text-[12.5px] font-medium rounded-full px-[14px] py-[6px] w-fit mb-7"
             >
-              <Badge variant="teal" className="mb-5">
-                <Sparkles size={10} className="mr-1" />
-                Untuk Guru SD · SMP · SMA Indonesia
-              </Badge>
+              <motion.span
+                className="w-1.5 h-1.5 bg-teal-500 rounded-full flex-shrink-0"
+                animate={{ opacity: [1, 0.4, 1], scale: [1, 0.65, 1] }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 2,
+                  ease: "easeInOut",
+                }}
+              />
+              Untuk Guru SD · SMP · SMA Indonesia
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 280, damping: 26, delay: 0.05 }}
-              className="font-display text-5xl lg:text-6xl font-bold text-stone-900 leading-[1.1] tracking-tight mb-5"
+              transition={{
+                type: "spring",
+                stiffness: 280,
+                damping: 26,
+                delay: 0.35,
+              }}
+              className="font-display font-normal text-[clamp(44px,5vw,62px)] text-stone-900 leading-[1.08] tracking-[-1.5px] mb-6"
             >
               Buat Modul Ajar
               <br />
               dalam{" "}
-              <WavyUnderline>hitungan detik</WavyUnderline>
+              <span className="italic text-teal-700">
+                <WavyUnderline>hitungan detik</WavyUnderline>
+              </span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 280, damping: 26, delay: 0.1 }}
-              className="text-lg text-stone-500 mb-9 leading-relaxed max-w-md"
+              transition={{
+                type: "spring",
+                stiffness: 280,
+                damping: 26,
+                delay: 0.5,
+              }}
+              className="text-[16.5px] leading-[1.7] font-light text-stone-500 max-w-[440px] mb-10"
             >
-              AjarAI membantu guru membuat Modul Ajar Kurikulum Merdeka yang lengkap,
-              terstruktur, dan siap pakai — hanya dengan mengisi form 2 menit.
+              {/* AjarAI membantu guru membuat Modul Ajar Kurikulum Merdeka yang
+              lengkap, terstruktur, dan siap pakai — hanya dalam 2 menit */}
+              {/* AjarAI buat Modul Ajar Kurikulum Merdeka untuk Anda — lengkap,
+              terstruktur, dan siap pakai dalam 2 menit. */}
+              {/* Hemat puluhan jam setiap minggu. AjarAI membantu guru membuat
+              Modul Ajar Kurikulum Merdeka yang lengkap, terstruktur, dan
+              langsung siap pakai — hanya dalam 2 menit. */}
+              Hemat puluhan jam setiap minggu. Lengkap, terstruktur, dan
+              langsung siap pakai hanya dalam 2 menit.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="flex items-center gap-3 flex-wrap mb-10"
+              transition={{ delay: 0.65 }}
+              className="flex items-center gap-5 flex-wrap mb-[52px]"
             >
-              <Button asChild size="lg" className="relative overflow-hidden">
+              <Button
+                asChild
+                size="lg"
+                className="relative overflow-hidden rounded-xl text-[15px] font-medium h-12 px-7"
+              >
                 <Link href="/register">
                   <motion.div
                     aria-hidden
                     className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/15 to-transparent"
                     animate={{ x: ["-150%", "250%"] }}
-                    transition={{ repeat: Infinity, duration: 3, ease: "linear", repeatDelay: 2 }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 3,
+                      ease: "linear",
+                      repeatDelay: 2,
+                    }}
                   />
-                  <Sparkles size={15} className="relative z-10" />
-                  <span className="relative z-10">Coba Gratis</span>
+                  <Sparkles size={16} className="relative z-10" />
+                  <span className="relative z-10">Coba Gratis Sekarang</span>
                 </Link>
               </Button>
-              <Button asChild variant="ghost-stone" size="lg">
-                <Link href="#how-it-works">Lihat cara kerja →</Link>
+              <Button
+                asChild
+                variant="ghost-stone"
+                size="lg"
+                className="text-[15px] text-stone-600 gap-2"
+              >
+                <Link href="#how-it-works">
+                  Lihat cara kerja
+                  <ChevronRight size={16} />
+                </Link>
               </Button>
             </motion.div>
 
@@ -269,29 +458,35 @@ function Hero() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.25 }}
-              className="flex items-center gap-3"
+              transition={{ delay: 0.8 }}
+              className="flex items-center gap-4"
             >
-              <div className="flex -space-x-2">
-                {(["#0F6E56", "#534AB7", "#1D9E75", "#633806"] as const).map((bg, i) => (
-                  <div
-                    key={i}
-                    className="w-7 h-7 rounded-full border-2 border-stone-50 flex items-center justify-center text-2xs font-bold text-white"
-                    style={{ backgroundColor: bg }}
-                  >
-                    {["A", "B", "C", "D"][i]}
-                  </div>
-                ))}
+              <div className="flex -space-x-2.5">
+                {(["#2d7d9a", "#8b5e3c", "#6b4c9a", "#c0514a"] as const).map(
+                  (bg, i) => (
+                    <div
+                      key={i}
+                      className="w-9 h-9 rounded-full border-[2.5px] border-stone-50 flex items-center justify-center text-xs font-semibold text-white"
+                      style={{ backgroundColor: bg }}
+                    >
+                      {["A", "B", "C", "D"][i]}
+                    </div>
+                  ),
+                )}
               </div>
-              <div>
+              <div className="ml-1">
                 <div className="flex items-center gap-0.5 mb-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={11} className="text-amber-400 fill-amber-400" />
+                    <Star
+                      key={i}
+                      size={13}
+                      className="text-amber-400 fill-amber-400"
+                    />
                   ))}
                 </div>
-                <p className="text-2xs text-stone-500">
+                <p className="text-[13px] text-stone-500">
                   Dipercaya{" "}
-                  <span className="font-semibold text-stone-700">2.400+ guru</span>{" "}
+                  <span className="font-semibold text-stone-800">20+ guru</span>{" "}
                   di seluruh Indonesia
                 </p>
               </div>
@@ -300,10 +495,15 @@ function Hero() {
 
           {/* Right — mockup card */}
           <motion.div
-            initial={{ opacity: 0, x: 24, y: 8 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 28, delay: 0.1 }}
-            className="lg:pl-4"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 28,
+              delay: 0.45,
+            }}
+            className="flex justify-center items-center py-16 px-16"
           >
             <HeroMockupCard />
           </motion.div>
@@ -314,13 +514,15 @@ function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
+        transition={{ delay: 1.4 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
       >
-        <span className="text-2xs text-stone-400 tracking-widest uppercase">Scroll</span>
+        <span className="text-[10px] text-stone-400 tracking-[.12em] uppercase">
+          Scroll
+        </span>
         <motion.div
-          animate={{ y: [0, 5, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+          animate={{ scaleY: [1, 0.5, 1], opacity: [0.6, 1, 0.6] }}
+          transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
           className="w-px h-8 bg-gradient-to-b from-stone-400 to-transparent"
         />
       </motion.div>
@@ -333,7 +535,7 @@ function HowItWorks() {
   const steps = [
     {
       title: "Isi Form",
-      desc: "Masukkan mata pelajaran, jenjang, kelas, topik, dan tujuan pembelajaran. Hanya 2 menit.",
+      desc: "Masukkan mata pelajaran, jenjang, kelas, topik, dan tujuan pembelajaran.",
       icon: FileText,
     },
     {
@@ -352,12 +554,15 @@ function HowItWorks() {
     <section id="how-it-works" className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal className="text-center mb-14">
-          <Badge variant="stone" className="mb-3">Cara Kerja</Badge>
+          <Badge variant="stone" className="mb-3">
+            Cara Kerja
+          </Badge>
           <h2 className="font-display text-3xl font-bold text-stone-900">
             Tiga langkah sederhana
           </h2>
           <p className="text-stone-500 text-sm mt-2 max-w-md mx-auto">
-            Dari form kosong ke modul ajar siap pakai dalam waktu kurang dari semenit.
+            Dari form kosong ke modul ajar siap pakai dalam waktu kurang dari
+            semenit.
           </p>
         </ScrollReveal>
 
@@ -381,7 +586,9 @@ function HowItWorks() {
                 <h3 className="font-display font-semibold text-base text-stone-900 mb-2">
                   {step.title}
                 </h3>
-                <p className="text-sm text-stone-500 leading-relaxed">{step.desc}</p>
+                <p className="text-sm text-stone-500 leading-relaxed">
+                  {step.desc}
+                </p>
               </div>
             </ScrollReveal>
           ))}
@@ -394,24 +601,57 @@ function HowItWorks() {
 // ── Features ─────────────────────────────────────────────
 function Features() {
   const features = [
-    { icon: CheckCircle2, title: "Format Kemendikbud", desc: "Otomatis sesuai komponen wajib: identitas, CP, TP, ATP, kegiatan pembelajaran, dan asesmen.", accent: true },
-    { icon: BookOpen, title: "Kurikulum Merdeka", desc: "Memahami fase, elemen, dan dimensi Profil Pelajar Pancasila secara mendalam.", accent: true },
-    { icon: FileText, title: "Editor Built-in", desc: "Edit langsung di browser — bold, bullet, heading, tanpa perlu Word atau Google Docs.", accent: false },
-    { icon: Download, title: "Export PDF & Word", desc: "Download satu klik. File .pdf dan .docx siap cetak dan dikirim ke kepala sekolah.", accent: false },
-    { icon: Zap, title: "Generate dalam 30 Detik", desc: "Dari form ke modul lengkap dalam hitungan detik. Bukan jam, bukan hari.", accent: true },
-    { icon: Layers, title: "Semua Mata Pelajaran", desc: "IPA, IPS, Matematika, Bahasa Indonesia, Bahasa Inggris — semua mapel SD hingga SMA.", accent: false },
+    {
+      icon: CheckCircle2,
+      title: "Format Kemendikbud",
+      desc: "Otomatis sesuai komponen wajib: identitas, CP, TP, ATP, kegiatan pembelajaran, dan asesmen.",
+      accent: true,
+    },
+    {
+      icon: BookOpen,
+      title: "Kurikulum Merdeka",
+      desc: "Memahami fase, elemen, dan dimensi Profil Pelajar Pancasila secara mendalam.",
+      accent: true,
+    },
+    {
+      icon: FileText,
+      title: "Editor Built-in",
+      desc: "Edit langsung di browser — bold, bullet, heading, tanpa perlu Word atau Google Docs.",
+      accent: false,
+    },
+    {
+      icon: Download,
+      title: "Export PDF & Word",
+      desc: "Download satu klik. File .pdf dan .docx siap cetak dan dikirim ke kepala sekolah.",
+      accent: false,
+    },
+    {
+      icon: Zap,
+      title: "Generate dalam 30 Detik",
+      desc: "Dari form ke modul lengkap dalam hitungan detik. Bukan jam, bukan hari.",
+      accent: true,
+    },
+    {
+      icon: Layers,
+      title: "Semua Mata Pelajaran",
+      desc: "IPA, IPS, Matematika, Bahasa Indonesia, Bahasa Inggris — semua mapel SD hingga SMA.",
+      accent: false,
+    },
   ];
 
   return (
     <section id="features" className="py-20 bg-stone-50">
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal className="text-center mb-14">
-          <Badge variant="stone" className="mb-3">Fitur</Badge>
+          <Badge variant="stone" className="mb-3">
+            Fitur
+          </Badge>
           <h2 className="font-display text-3xl font-bold text-stone-900">
             Semua yang kamu butuhkan
           </h2>
           <p className="text-stone-500 text-sm mt-2 max-w-md mx-auto">
-            Dirancang khusus untuk guru Indonesia, dari pengisian form hingga dokumen final.
+            Dirancang khusus untuk guru Indonesia, dari pengisian form hingga
+            dokumen final.
           </p>
         </ScrollReveal>
 
@@ -422,7 +662,7 @@ function Features() {
                 <div
                   className={cn(
                     "w-9 h-9 rounded-lg flex items-center justify-center mb-3",
-                    feat.accent ? "bg-teal-50" : "bg-stone-100"
+                    feat.accent ? "bg-teal-50" : "bg-stone-100",
                   )}
                 >
                   <feat.icon
@@ -433,7 +673,9 @@ function Features() {
                 <h3 className="font-display font-semibold text-sm text-stone-900 mb-1">
                   {feat.title}
                 </h3>
-                <p className="text-xs text-stone-500 leading-relaxed">{feat.desc}</p>
+                <p className="text-xs text-stone-500 leading-relaxed">
+                  {feat.desc}
+                </p>
               </SpringHoverCard>
             </ScrollReveal>
           ))}
@@ -445,13 +687,30 @@ function Features() {
 
 // ── Pricing ───────────────────────────────────────────────
 function Pricing() {
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
+  const [period, setPeriod] = useState<"bulanan" | "tahunan">("bulanan");
+
+  function ctaHref(planName: string) {
+    if (!isLoggedIn) return "/register";
+    if (planName === "Gratis") return "/dashboard";
+    if (planName === "Pro") return "/harga";
+    return "#kontak";
+  }
+
   const plans = [
     {
       name: "Gratis",
-      price: "Rp 0",
-      period: "selamanya",
-      desc: "Untuk mencoba AjarAI",
-      features: ["5 modul per bulan", "Format standar Kemendikbud", "Export PDF", "Editor built-in"],
+      priceMonthly: 0,
+      priceYearly: 0,
+      periodLabel: "selamanya",
+      desc: "Untuk mencoba SiPengajar",
+      features: [
+        "5 modul per bulan",
+        "Format standar Kemendikbud",
+        "Export PDF",
+        "Editor built-in",
+      ],
       cta: "Mulai Gratis",
       variant: "outline" as const,
       highlight: false,
@@ -459,10 +718,17 @@ function Pricing() {
     },
     {
       name: "Pro",
-      price: "Rp 79.000",
-      period: "per bulan",
+      priceMonthly: 79000,
+      priceYearly: 59000,
+      periodLabel: "per bulan",
       desc: "Untuk guru aktif",
-      features: ["Modul tak terbatas", "Export PDF + Word (.docx)", "Template premium", "Prioritas generate", "Riwayat modul"],
+      features: [
+        "Modul tak terbatas",
+        "Export PDF + Word (.docx)",
+        "Template premium",
+        "Prioritas generate",
+        "Riwayat modul",
+      ],
       cta: "Mulai Pro",
       variant: "primary" as const,
       highlight: true,
@@ -470,10 +736,17 @@ function Pricing() {
     },
     {
       name: "Sekolah",
-      price: "Rp 499.000",
-      period: "per bulan",
+      priceMonthly: 499000,
+      priceYearly: 399000,
+      periodLabel: "per bulan",
       desc: "Untuk tim guru & sekolah",
-      features: ["Hingga 20 guru", "Dashboard admin", "Laporan penggunaan", "Branding sekolah", "Dukungan prioritas"],
+      features: [
+        "Hingga 20 guru",
+        "Dashboard admin",
+        "Laporan penggunaan",
+        "Branding sekolah",
+        "Dukungan prioritas",
+      ],
       cta: "Hubungi Kami",
       variant: "pro" as const,
       highlight: false,
@@ -481,17 +754,79 @@ function Pricing() {
     },
   ];
 
+  function formatPrice(monthly: number, yearly: number) {
+    const price = period === "bulanan" ? monthly : yearly;
+    if (price === 0) return "Gratis";
+    return `Rp ${(price / 1000).toFixed(0)}rb`;
+  }
+
   return (
     <section id="pricing" className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-6">
-        <ScrollReveal className="text-center mb-14">
-          <Badge variant="stone" className="mb-3">Harga</Badge>
+        <ScrollReveal className="text-center mb-10">
+          <Badge variant="stone" className="mb-3">
+            Harga
+          </Badge>
           <h2 className="font-display text-3xl font-bold text-stone-900">
             Mulai gratis, upgrade kapan saja
           </h2>
-          <p className="text-stone-500 text-sm mt-2">
+          <p className="text-stone-500 text-sm mt-2 mb-6">
             Tidak ada biaya tersembunyi. Batalkan kapan saja.
           </p>
+
+          {/* Bulanan / Tahunan toggle */}
+          <div className="inline-flex items-center gap-3 bg-stone-100 rounded-full px-4 py-2">
+            <button
+              onClick={() => setPeriod("bulanan")}
+              className={cn(
+                "text-sm font-medium transition-colors",
+                period === "bulanan" ? "text-stone-900" : "text-stone-400",
+              )}
+            >
+              Bulanan
+            </button>
+            <button
+              onClick={() =>
+                setPeriod((p) => (p === "bulanan" ? "tahunan" : "bulanan"))
+              }
+              className={cn(
+                "relative w-10 h-5 rounded-full transition-colors shrink-0",
+                period === "tahunan" ? "bg-teal-600" : "bg-stone-300",
+              )}
+            >
+              <motion.div
+                className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"
+                animate={{
+                  left: period === "tahunan" ? "calc(100% - 18px)" : "2px",
+                }}
+                transition={{ type: "spring", stiffness: 500, damping: 35 }}
+              />
+            </button>
+            <button
+              onClick={() => setPeriod("tahunan")}
+              className={cn(
+                "text-sm font-medium transition-colors flex items-center gap-1.5",
+                period === "tahunan" ? "text-stone-900" : "text-stone-400",
+              )}
+            >
+              Tahunan
+              <AnimatePresence>
+                {period === "tahunan" && (
+                  <motion.span
+                    key="hemat"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    className="inline-flex items-center gap-1 bg-teal-50 text-teal-700 text-2xs font-semibold px-1.5 py-0.5 rounded-full"
+                  >
+                    <Zap size={9} />
+                    Hemat 25%
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+          </div>
         </ScrollReveal>
 
         <div className="grid md:grid-cols-3 gap-5 items-start">
@@ -504,8 +839,8 @@ function Pricing() {
                   plan.highlight
                     ? "border-2 border-teal-400 bg-teal-50 shadow-lift"
                     : plan.name === "Sekolah"
-                    ? "border border-violet-200 bg-white"
-                    : "border border-stone-200 bg-white"
+                      ? "border border-violet-200 bg-white"
+                      : "border border-stone-200 bg-white",
                 )}
               >
                 {plan.popular && (
@@ -513,24 +848,60 @@ function Pricing() {
                     Paling Populer
                   </Badge>
                 )}
-                <h3 className="font-display font-bold text-base text-stone-900">{plan.name}</h3>
-                <p className="text-2xs text-stone-400 mt-0.5 mb-4">{plan.desc}</p>
-                <div className="flex items-end gap-1 mb-5">
-                  <span className="text-3xl font-bold font-display text-stone-900">
-                    {plan.price}
-                  </span>
-                  <span className="text-xs text-stone-400 mb-1">/{plan.period}</span>
+                <h3 className="font-display font-bold text-base text-stone-900">
+                  {plan.name}
+                </h3>
+                <p className="text-2xs text-stone-400 mt-0.5 mb-4">
+                  {plan.desc}
+                </p>
+                <div className="h-10 flex items-end gap-1 mb-1">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={`${plan.name}-${period}`}
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.15 }}
+                      className="text-3xl font-bold font-display text-stone-900"
+                    >
+                      {formatPrice(plan.priceMonthly, plan.priceYearly)}
+                    </motion.span>
+                  </AnimatePresence>
+                  {plan.priceMonthly > 0 && (
+                    <span className="text-xs text-stone-400 mb-1">
+                      /{plan.periodLabel}
+                    </span>
+                  )}
                 </div>
+                {period === "tahunan" && plan.priceMonthly > 0 && (
+                  <p className="text-2xs text-teal-600 mb-4">
+                    Hemat Rp{" "}
+                    {(
+                      ((plan.priceMonthly - plan.priceYearly) * 12) /
+                      1000
+                    ).toFixed(0)}
+                    rb/tahun
+                  </p>
+                )}
+                {!(period === "tahunan" && plan.priceMonthly > 0) && (
+                  <div className="mb-4" />
+                )}
                 <ul className="space-y-2 mb-6 flex-1">
                   {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-stone-700">
-                      <Check size={14} className="text-teal-600 flex-shrink-0 mt-0.5" />
+                    <li
+                      key={f}
+                      className="flex items-start gap-2 text-sm text-stone-700"
+                    >
+                      <Check
+                        size={14}
+                        className="text-teal-600 shrink-0 mt-0.5"
+                      />
                       {f}
                     </li>
                   ))}
                 </ul>
                 <Button asChild variant={plan.variant} className="w-full">
-                  <Link href="/register">{plan.cta}</Link>
+                  <Link href={ctaHref(plan.name)}>{plan.cta}</Link>
                 </Button>
               </motion.div>
             </ScrollReveal>
@@ -543,10 +914,34 @@ function Pricing() {
 
 // ── Template Preview ──────────────────────────────────────
 const TEMPLATES = [
-  { mapel: "Matematika", judul: "Persamaan Linear Satu Variabel", kelas: "Kelas 7 SMP", fase: "Fase D", color: "info" as const },
-  { mapel: "IPA", judul: "Sistem Tata Surya dan Planet", kelas: "Kelas 6 SD", fase: "Fase C", color: "teal" as const },
-  { mapel: "Bahasa Indonesia", judul: "Menulis Teks Prosedur", kelas: "Kelas 8 SMP", fase: "Fase D", color: "warning" as const },
-  { mapel: "PPKn", judul: "Nilai-Nilai Pancasila dalam Kehidupan", kelas: "Kelas 10 SMA", fase: "Fase E", color: "violet" as const },
+  {
+    mapel: "Matematika",
+    judul: "Persamaan Linear Satu Variabel",
+    kelas: "Kelas 7 SMP",
+    fase: "Fase D",
+    color: "info" as const,
+  },
+  {
+    mapel: "IPA",
+    judul: "Sistem Tata Surya dan Planet",
+    kelas: "Kelas 6 SD",
+    fase: "Fase C",
+    color: "teal" as const,
+  },
+  {
+    mapel: "Bahasa Indonesia",
+    judul: "Menulis Teks Prosedur",
+    kelas: "Kelas 8 SMP",
+    fase: "Fase D",
+    color: "warning" as const,
+  },
+  {
+    mapel: "PPKn",
+    judul: "Nilai-Nilai Pancasila dalam Kehidupan",
+    kelas: "Kelas 10 SMA",
+    fase: "Fase E",
+    color: "violet" as const,
+  },
 ];
 
 function TemplatePreview() {
@@ -555,7 +950,9 @@ function TemplatePreview() {
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal className="flex items-end justify-between mb-8">
           <div>
-            <Badge variant="stone" className="mb-3">Template</Badge>
+            <Badge variant="stone" className="mb-3">
+              Template
+            </Badge>
             <h2 className="font-display text-3xl font-bold text-stone-900">
               Template siap pakai
             </h2>
@@ -604,7 +1001,8 @@ function CTABanner() {
             Mulai buat modul ajar pertamamu — gratis
           </h2>
           <p className="text-teal-100 text-sm mb-8 max-w-md mx-auto">
-            Bergabung dengan ribuan guru yang sudah menghemat puluhan jam setiap bulannya.
+            Bergabung dengan ribuan guru yang sudah menghemat puluhan jam setiap
+            bulannya.
           </p>
           <Link
             href="/register"
@@ -630,12 +1028,15 @@ function Footer() {
               <div className="w-6 h-6 bg-teal-600 rounded flex items-center justify-center">
                 <Sparkles size={13} className="text-white" />
               </div>
-              <span className="font-display font-semibold text-base text-white">AjarAI</span>
+              <span className="font-display font-semibold text-base text-white">
+                SiPengajar
+              </span>
             </div>
             <p className="text-sm leading-relaxed mb-4">
-              Platform pembuatan Modul Ajar Kurikulum Merdeka berbasis AI untuk guru Indonesia.
+              Platform pembuatan Modul Ajar Kurikulum Merdeka berbasis AI untuk
+              guru Indonesia.
             </p>
-            <p className="text-2xs">© 2025 AjarAI. Hak cipta dilindungi.</p>
+            <p className="text-2xs">© 2025 SiPengajar. Hak cipta dilindungi.</p>
           </div>
 
           <div>
@@ -643,13 +1044,18 @@ function Footer() {
               Produk
             </p>
             <ul className="space-y-2">
-              {["Fitur", "Template", "Harga", "Changelog", "Roadmap"].map((item) => (
-                <li key={item}>
-                  <Link href="/register" className="text-sm hover:text-white transition-colors">
-                    {item}
-                  </Link>
-                </li>
-              ))}
+              {["Fitur", "Template", "Harga", "Changelog", "Roadmap"].map(
+                (item) => (
+                  <li key={item}>
+                    <Link
+                      href="/register"
+                      className="text-sm hover:text-white transition-colors"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
 
@@ -658,9 +1064,18 @@ function Footer() {
               Dukungan
             </p>
             <ul className="space-y-2">
-              {["FAQ", "Panduan Penggunaan", "Kontak Kami", "Kebijakan Privasi", "Syarat & Ketentuan"].map((item) => (
+              {[
+                "FAQ",
+                "Panduan Penggunaan",
+                "Kontak Kami",
+                "Kebijakan Privasi",
+                "Syarat & Ketentuan",
+              ].map((item) => (
                 <li key={item}>
-                  <Link href="/register" className="text-sm hover:text-white transition-colors">
+                  <Link
+                    href="/register"
+                    className="text-sm hover:text-white transition-colors"
+                  >
                     {item}
                   </Link>
                 </li>
@@ -673,7 +1088,9 @@ function Footer() {
           <p className="text-2xs">Dibuat dengan ❤️ untuk guru-guru Indonesia</p>
           <div className="flex items-center gap-1">
             <GraduationCap size={13} className="text-teal-600" />
-            <span className="text-2xs text-teal-500">Kurikulum Merdeka Ready</span>
+            <span className="text-2xs text-teal-500">
+              Kurikulum Merdeka Ready
+            </span>
           </div>
         </div>
       </div>
@@ -684,7 +1101,7 @@ function Footer() {
 // ── Page ──────────────────────────────────────────────────
 export default function LandingPage() {
   return (
-    <>
+    <SessionProvider>
       <Navbar />
       <Hero />
       <HowItWorks />
@@ -693,6 +1110,6 @@ export default function LandingPage() {
       <TemplatePreview />
       <CTABanner />
       <Footer />
-    </>
+    </SessionProvider>
   );
 }

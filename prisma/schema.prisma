@@ -49,6 +49,15 @@ model Modul {
   @@map("moduls")
 }
 
+model Subject {
+  id      String  @id @default(cuid())
+  name    String  @unique
+  order   Int     @default(0)
+  active  Boolean @default(true)
+
+  @@map("subjects")
+}
+
 model Template {
   id       String @id @default(cuid())
   mapel    String
