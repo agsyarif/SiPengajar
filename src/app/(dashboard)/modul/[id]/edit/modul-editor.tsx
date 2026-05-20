@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   Download,
+  Printer,
   PanelRight,
   X,
   BookOpen,
@@ -22,6 +23,8 @@ import {
   TipTapEditor,
   EditorToolbar,
 } from "@/components/features/editor/tiptap-editor";
+import { EditorBubbleMenu } from "@/components/features/editor/editor-bubble-menu";
+import { printAsPDF } from "@/lib/export-pdf";
 import type { Editor } from "@tiptap/react";
 import { getMapelColor, cn } from "@/lib/utils";
 
@@ -65,9 +68,21 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
   const isProcessing = modul.status === "PROCESSING";
   const hasContent = !isProcessing && !!modul.content;
 
+  const handleExportPDF = () => {
+    const content = editor ? editor.getHTML() : modul.content;
+    printAsPDF(content, modul.judul, {
+      mapel: modul.mapel,
+      jenjang: modul.jenjang,
+      kelas: modul.kelas,
+      topik: modul.topik,
+    });
+  };
+
   return (
-    /* Full-viewport overlay to the right of the 240px sidebar */
-    <div className="fixed inset-0 z-20 flex flex-col bg-[#F5F4F0] transition-[left] duration-300" style={{ left: "var(--sidebar-w, 240px)" }}>
+    <div
+      className="fixed inset-0 z-20 flex flex-col bg-[#F5F4F0] transition-[left] duration-300"
+      style={{ left: "var(--sidebar-w, 240px)" }}
+    >
       {/* ── Top bar ──────────────────────────────────────────── */}
       <header className="shrink-0 h-12 bg-white/90 backdrop-blur-md border-b border-stone-200/80 flex items-center px-4 gap-3">
         <Button
@@ -99,12 +114,18 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
 
         <div className="flex items-center gap-1.5 shrink-0">
           {hasContent && (
-            <Button variant="ghost-stone" size="sm" asChild>
-              <a href={`/api/modul/${modul.id}/export?format=docx`} download>
-                <Download size={13} />
-                <span className="hidden sm:inline">Export DOCX</span>
-              </a>
-            </Button>
+            <>
+              <Button variant="ghost-stone" size="sm" asChild>
+                <a href={`/api/modul/${modul.id}/export?format=docx`} download>
+                  <Download size={13} />
+                  <span className="hidden sm:inline">DOCX</span>
+                </a>
+              </Button>
+              <Button variant="ghost-stone" size="sm" onClick={handleExportPDF}>
+                <Printer size={13} />
+                <span className="hidden sm:inline">PDF</span>
+              </Button>
+            </>
           )}
           <button
             onClick={() => setPanelOpen((v) => !v)}
@@ -123,7 +144,6 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
 
       {/* ── Body ─────────────────────────────────────────────── */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Editor / state area */}
         <motion.div
           className="flex-1 overflow-y-auto"
           animate={{ marginRight: panelOpen ? 0 : 0 }}
@@ -177,7 +197,10 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
             </div>
           )}
 
-          {/* ── Sticky toolbar ──────────────────────────── */}
+          {/* Floating bubble menu on text selection */}
+          {hasContent && editor && <EditorBubbleMenu editor={editor} />}
+
+          {/* Sticky toolbar */}
           {hasContent && editor && (
             <div className="sticky top-0 z-20 bg-white border-b border-stone-100 shadow-sm flex justify-center">
               <EditorToolbar editor={editor} />
@@ -193,7 +216,6 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
                 transition={{ type: "spring", stiffness: 280, damping: 28 }}
                 className="max-w-185 mx-auto bg-white rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.06)]"
               >
-                {/* Paper header strip */}
                 <div className="px-14 pt-10 pb-5 border-b border-stone-100 rounded-t-lg overflow-hidden">
                   <div className="flex items-center gap-2 mb-3">
                     <Badge variant={color}>{modul.mapel}</Badge>
@@ -213,7 +235,6 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
                   </p>
                 </div>
 
-                {/* TipTap content */}
                 <TipTapEditor
                   content={modul.content}
                   modulId={modul.id}
@@ -221,7 +242,6 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
                 />
               </motion.div>
 
-              {/* Bottom breathing room */}
               <div className="h-20" />
             </div>
           )}
@@ -267,7 +287,6 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
                   </div>
                 ))}
 
-                {/* Tujuan — multiline */}
                 <div className="pt-3">
                   <p className="text-2xs text-stone-400 mb-1.5 uppercase tracking-wide">
                     Tujuan Pembelajaran
@@ -278,7 +297,6 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
                 </div>
               </div>
 
-              {/* Panel footer */}
               <div className="px-4 py-3 border-t border-stone-100">
                 <Badge
                   variant={modul.status === "DONE" ? "teal" : "stone"}

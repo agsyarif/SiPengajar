@@ -51,10 +51,6 @@ const ClassAttribute = Extension.create({
           "bulletList",
           "orderedList",
           "listItem",
-          "table",
-          "tableRow",
-          "tableCell",
-          "tableHeader",
           "horizontalRule",
         ],
         attributes: {
@@ -66,6 +62,47 @@ const ClassAttribute = Extension.create({
         },
       },
     ];
+  },
+});
+
+// TipTap v3 Table/TableCell/TableHeader have no addAttributes() for `class`,
+// so addGlobalAttributes won't persist it. We extend each directly.
+const CustomTable = Table.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      class: {
+        default: null,
+        parseHTML: (el) => el.getAttribute("class") || null,
+        renderHTML: (attrs) => (attrs.class ? { class: attrs.class } : {}),
+      },
+    };
+  },
+});
+
+const CustomTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      class: {
+        default: null,
+        parseHTML: (el) => el.getAttribute("class") || null,
+        renderHTML: (attrs) => (attrs.class ? { class: attrs.class } : {}),
+      },
+    };
+  },
+});
+
+const CustomTableHeader = TableHeader.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      class: {
+        default: null,
+        parseHTML: (el) => el.getAttribute("class") || null,
+        renderHTML: (attrs) => (attrs.class ? { class: attrs.class } : {}),
+      },
+    };
   },
 });
 
@@ -365,10 +402,10 @@ export function TipTapEditor({
       Link.configure({ openOnClick: false }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Placeholder.configure({ placeholder: "Mulai edit bagian ini..." }),
-      Table.configure({ resizable: false }),
+      CustomTable.configure({ resizable: false }),
       TableRow,
-      TableHeader,
-      TableCell,
+      CustomTableHeader,
+      CustomTableCell,
       ClassAttribute,
     ],
     content: normalizeModulHTML(content),

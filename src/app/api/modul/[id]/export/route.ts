@@ -19,24 +19,39 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
   }
 
   if (!modul.content) {
-    return NextResponse.json({ message: "Konten modul belum tersedia." }, { status: 400 });
+    return NextResponse.json(
+      { message: "Konten modul belum tersedia." },
+      { status: 400 },
+    );
   }
 
   const format = req.nextUrl.searchParams.get("format") ?? "docx";
 
   if (format === "docx") {
-    const buffer = await buildModulDocx(modul.content);
+    const buffer = await buildModulDocx(modul.content, {
+      mapel: modul.mapel,
+      jenjang: modul.jenjang,
+      kelas: modul.kelas,
+      topik: modul.topik,
+      judul: modul.judul,
+    });
     const filename = encodeURIComponent(
-      `Modul_Ajar_${modul.mapel}_${modul.judul}`.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_]/g, "")
+      `Modul_Ajar_${modul.mapel}_${modul.judul}`
+        .replace(/\s+/g, "_")
+        .replace(/[^a-zA-Z0-9_]/g, ""),
     );
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
-        "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "Content-Disposition": `attachment; filename="${filename}.docx"`,
       },
     });
   }
 
-  return NextResponse.json({ message: `Format "${format}" belum didukung.` }, { status: 400 });
+  return NextResponse.json(
+    { message: `Format "${format}" belum didukung.` },
+    { status: 400 },
+  );
 }
