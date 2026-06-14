@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   Download,
   Printer,
+  FileText,
   PanelRight,
   X,
   BookOpen,
@@ -16,14 +17,16 @@ import {
   Sparkles,
   RefreshCw,
   ChevronRight,
+  ChevronDown,
 } from "lucide-react";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   TipTapEditor,
   EditorToolbar,
-} from "@/components/features/editor/tiptap-editor";
-import { EditorBubbleMenu } from "@/components/features/editor/editor-bubble-menu";
+} from "@/components/editor/tiptap-editor";
+import { EditorBubbleMenu } from "@/components/editor/editor-bubble-menu";
 import {
   TemplatePicker,
   type TemplateId,
@@ -83,12 +86,8 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
     >
       {/* ── Top bar ──────────────────────────────────────────── */}
       <header className="shrink-0 h-12 bg-white/90 backdrop-blur-md border-b border-stone-200/80 flex items-center px-4 gap-3">
-        <Button
-          asChild
-          variant="ghost-stone"
-          size="sm"
-          className="shrink-0 -ml-1"
-        >
+        {/* Back */}
+        <Button asChild variant="ghost-stone" size="sm" className="shrink-0 -ml-1">
           <Link href="/modul">
             <ArrowLeft size={14} />
             <span className="hidden sm:inline">Kembali</span>
@@ -97,55 +96,97 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
 
         <div className="w-px h-4 bg-stone-200 shrink-0" />
 
+        {/* Title */}
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <Badge variant={color} className="shrink-0">
-            {modul.mapel}
-          </Badge>
-          <span className="text-sm font-semibold text-stone-900 truncate">
-            {modul.judul}
-          </span>
-          <span className="text-stone-300 shrink-0">·</span>
+          <Badge variant={color} className="shrink-0">{modul.mapel}</Badge>
+          <span className="text-sm font-semibold text-stone-900 truncate">{modul.judul}</span>
+          <span className="text-stone-300 shrink-0 hidden md:block">·</span>
           <span className="text-xs text-stone-400 shrink-0 hidden md:block">
             {modul.jenjang} Kelas {modul.kelas} · {modul.fase}
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 shrink-0">
-          {hasContent && (
-            <>
-              <TemplatePicker
-                value={template}
-                modulId={modul.id}
-                onChange={setTemplate}
-              />
-              <div className="w-px h-4 bg-stone-200 shrink-0" />
-              <Button variant="ghost-stone" size="sm" asChild>
-                <a href={`/api/modul/${modul.id}/export?format=docx`} download>
-                  <Download size={13} />
-                  <span className="hidden sm:inline">DOCX</span>
-                </a>
-              </Button>
-              <Button variant="ghost-stone" size="sm" asChild>
-                <a href={`/api/modul/${modul.id}/export?format=pdf`} download>
-                  <Printer size={13} />
-                  <span className="hidden sm:inline">PDF</span>
-                </a>
-              </Button>
-            </>
+        {/* Actions */}
+        {hasContent && (
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Template picker dropdown */}
+            <TemplatePicker value={template} modulId={modul.id} onChange={setTemplate} />
+
+            <div className="w-px h-4 bg-stone-200 shrink-0" />
+
+            {/* Download dropdown */}
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <button
+                  type="button"
+                  className="h-8 px-2.5 flex items-center gap-1.5 rounded-lg border border-stone-200 bg-white text-xs font-medium text-stone-600 hover:bg-stone-50 hover:border-stone-300 transition-colors focus:outline-none"
+                >
+                  <Download size={12} className="text-stone-400" />
+                  <span className="hidden sm:inline">Unduh</span>
+                  <ChevronDown size={11} className="text-stone-400" />
+                </button>
+              </DropdownMenu.Trigger>
+
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                  sideOffset={6}
+                  align="end"
+                  className="w-52 rounded-xl border border-stone-200 bg-white shadow-modal p-1.5 z-50 animate-pop-in"
+                >
+                  <p className="px-2.5 pt-1 pb-2 text-[10px] font-semibold uppercase tracking-widest text-stone-400">
+                    Format Unduhan
+                  </p>
+                  <DropdownMenu.Item asChild>
+                    <a
+                      href={`/api/modul/${modul.id}/export?format=docx`}
+                      download
+                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-stone-700 hover:bg-stone-50 outline-none cursor-pointer transition-colors"
+                    >
+                      <span className="w-7 h-7 rounded-md bg-blue-50 flex items-center justify-center shrink-0">
+                        <FileText size={13} className="text-blue-500" />
+                      </span>
+                      <div>
+                        <p className="font-medium text-stone-800 text-xs">Word (.docx)</p>
+                        <p className="text-[10px] text-stone-400">Edit ulang di Microsoft Word</p>
+                      </div>
+                    </a>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item asChild>
+                    <a
+                      href={`/api/modul/${modul.id}/export?format=pdf`}
+                      download
+                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-stone-700 hover:bg-stone-50 outline-none cursor-pointer transition-colors"
+                    >
+                      <span className="w-7 h-7 rounded-md bg-red-50 flex items-center justify-center shrink-0">
+                        <Printer size={13} className="text-red-400" />
+                      </span>
+                      <div>
+                        <p className="font-medium text-stone-800 text-xs">PDF</p>
+                        <p className="text-[10px] text-stone-400">Siap cetak & bagikan</p>
+                      </div>
+                    </a>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+
+            <div className="w-px h-4 bg-stone-200 shrink-0" />
+          </div>
+        )}
+
+        {/* Info panel toggle */}
+        <button
+          onClick={() => setPanelOpen((v) => !v)}
+          className={cn(
+            "w-8 h-8 rounded-md flex items-center justify-center transition-colors shrink-0",
+            panelOpen
+              ? "bg-teal-50 text-teal-700"
+              : "text-stone-400 hover:bg-stone-100 hover:text-stone-700",
           )}
-          <button
-            onClick={() => setPanelOpen((v) => !v)}
-            className={cn(
-              "w-8 h-8 rounded-md flex items-center justify-center transition-colors",
-              panelOpen
-                ? "bg-teal-50 text-teal-700"
-                : "text-stone-400 hover:bg-stone-100 hover:text-stone-700",
-            )}
-            title="Informasi Modul"
-          >
-            <PanelRight size={15} />
-          </button>
-        </div>
+          title="Informasi Modul"
+        >
+          <PanelRight size={15} />
+        </button>
       </header>
 
       {/* ── Body ─────────────────────────────────────────────── */}

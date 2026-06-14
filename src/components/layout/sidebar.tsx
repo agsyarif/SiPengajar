@@ -52,7 +52,10 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
     const update = (e: MediaQueryListEvent | MediaQueryList) => {
       const mobile = e.matches;
       setIsMobile(mobile);
-      document.documentElement.style.setProperty("--sidebar-w", mobile ? "0px" : `${collapsed ? W_COLLAPSED : W_EXPANDED}px`);
+      document.documentElement.style.setProperty(
+        "--sidebar-w",
+        mobile ? "0px" : `${collapsed ? W_COLLAPSED : W_EXPANDED}px`,
+      );
     };
     update(mq);
     mq.addEventListener("change", update);
@@ -97,10 +100,27 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
       }
       initial={false}
       transition={{ type: "spring", stiffness: 380, damping: 32 }}
-      className="fixed left-0 top-0 h-full bg-stone-50 border-r border-stone-200 flex flex-col z-40 overflow-hidden"
+      className="fixed left-0 top-0 h-full bg-stone-50 border-r border-stone-200 flex flex-col z-40 overflow-visible"
     >
-      {/* ── Logo + Collapse toggle ── */}
-      <div className="h-14 flex items-center px-3 border-b border-stone-200 shrink-0 gap-2">
+      {/* ── Floating collapse toggle — sits on the border line ── */}
+      {!isMobile && (
+        <button
+          onClick={toggle}
+          title={collapsed ? "Perluas sidebar" : "Ciutkan sidebar"}
+          className={cn(
+            "absolute top-[22px] right-0 translate-x-1/2 z-50",
+            "w-5 h-5 rounded-full bg-white border border-stone-200 shadow-sm",
+            "flex items-center justify-center",
+            "text-stone-400 hover:text-teal-600 hover:border-teal-300 hover:shadow-md",
+            "transition-all duration-150",
+          )}
+        >
+          {collapsed ? <ChevronRight size={10} /> : <ChevronLeft size={10} />}
+        </button>
+      )}
+
+      {/* ── Logo ── */}
+      <div className="h-14 flex items-center px-3 gap-2 border-b border-stone-200 shrink-0 overflow-hidden">
         <Link
           href="/dashboard"
           onClick={handleNavClick}
@@ -125,21 +145,13 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
           </AnimatePresence>
         </Link>
 
-        {/* Mobile: close button */}
-        {isMobile ? (
+        {/* Mobile: close button only */}
+        {isMobile && (
           <button
             onClick={onMobileClose}
             className="w-6 h-6 flex items-center justify-center rounded text-stone-400 hover:bg-stone-200 hover:text-stone-700 transition-colors shrink-0"
           >
             <X size={14} />
-          </button>
-        ) : (
-          <button
-            onClick={toggle}
-            title={collapsed ? "Perluas sidebar" : "Ciutkan sidebar"}
-            className="w-6 h-6 flex items-center justify-center rounded text-stone-400 hover:bg-stone-200 hover:text-stone-700 transition-colors shrink-0"
-          >
-            {collapsed ? <ChevronRight size={13} /> : <ChevronLeft size={13} />}
           </button>
         )}
       </div>
@@ -174,7 +186,7 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
       </div>
 
       {/* ── Nav ── */}
-      <nav className="flex-1 px-2 space-y-0.5 overflow-hidden">
+      <nav className="flex-1 px-2 space-y-0.5 overflow-x-hidden overflow-y-auto">
         {navItems.map((item) => {
           const active = pathname.startsWith(item.href);
           return (

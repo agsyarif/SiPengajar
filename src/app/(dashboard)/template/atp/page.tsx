@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { FadeIn, FadeInStagger, FadeInItem } from "@/components/motion/fade-in";
-import { LearningPathRail } from "@/components/features/atp/learning-path-rail";
+import { LearningPathRail } from "@/components/atp/learning-path-rail";
 import { BookOpen, ChevronRight } from "lucide-react";
 import type { LearningOutcomeWithChapters } from "@/types";
 
