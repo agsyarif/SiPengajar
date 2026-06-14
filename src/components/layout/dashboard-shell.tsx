@@ -9,7 +9,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-stone-50">
-      <Sidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
+      <Sidebar
+        mobileOpen={mobileOpen}
+        onMobileClose={() => setMobileOpen(false)}
+      />
 
       {/* Mobile backdrop */}
       <AnimatePresence>
@@ -45,7 +48,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </header>
 
         <main className="flex-1">
-          <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 md:py-8">
+          {/* <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 md:py-8"> */}
+          <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8">
             {children}
           </div>
         </main>

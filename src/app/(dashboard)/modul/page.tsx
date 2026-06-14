@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, BookOpen, CheckCircle2, FileEdit, Loader2 } from "lucide-react";
 import { buttonVariants } from "@/lib/button-variants";
 import { FadeIn } from "@/components/motion/fade-in";
 import { ModulListClient } from "@/components/modul/modul-list-client";
@@ -62,19 +62,66 @@ export default async function ModulPage() {
         <FadeIn delay={0.05}>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "Total",   value: total,      accent: false },
-              { label: "Selesai", value: done,        accent: true  },
-              { label: "Draft",   value: draft,       accent: false },
-              { label: "Proses",  value: processing,  accent: false },
-            ].map(({ label, value, accent }) => (
+              {
+                label: "Total Modul",
+                value: total,
+                icon: BookOpen,
+                iconBg: "bg-stone-100",
+                iconColor: "text-stone-500",
+                valueColor: "text-stone-900",
+                bar: null,
+              },
+              {
+                label: "Selesai",
+                value: done,
+                icon: CheckCircle2,
+                iconBg: "bg-teal-50",
+                iconColor: "text-teal-600",
+                valueColor: "text-teal-700",
+                bar: { width: total ? (done / total) * 100 : 0, color: "bg-teal-500" },
+              },
+              {
+                label: "Draft",
+                value: draft,
+                icon: FileEdit,
+                iconBg: "bg-amber-50",
+                iconColor: "text-amber-500",
+                valueColor: "text-amber-700",
+                bar: { width: total ? (draft / total) * 100 : 0, color: "bg-amber-400" },
+              },
+              {
+                label: "Diproses",
+                value: processing,
+                icon: Loader2,
+                iconBg: "bg-blue-50",
+                iconColor: "text-blue-500",
+                valueColor: "text-blue-700",
+                bar: { width: total ? (processing / total) * 100 : 0, color: "bg-blue-400" },
+              },
+            ].map(({ label, value, icon: Icon, iconBg, iconColor, valueColor, bar }) => (
               <div
                 key={label}
-                className="bg-white border border-stone-200 rounded-lg px-3 py-2.5 text-center"
+                className="bg-white border border-stone-200 rounded-xl px-4 py-3.5 flex flex-col gap-3"
               >
-                <p className={`text-xl font-semibold font-display ${accent ? "text-teal-600" : "text-stone-900"}`}>
-                  {value}
-                </p>
-                <p className="text-2xs text-stone-400 mt-0.5">{label}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-stone-500 font-medium">{label}</span>
+                  <span className={`flex items-center justify-center w-7 h-7 rounded-lg ${iconBg}`}>
+                    <Icon size={14} className={iconColor} />
+                  </span>
+                </div>
+                <div>
+                  <p className={`text-2xl font-semibold font-display leading-none ${valueColor}`}>
+                    {value}
+                  </p>
+                  {bar && (
+                    <div className="mt-2.5 h-1 w-full rounded-full bg-stone-100">
+                      <div
+                        className={`h-1 rounded-full transition-all duration-500 ${bar.color}`}
+                        style={{ width: `${bar.width}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
