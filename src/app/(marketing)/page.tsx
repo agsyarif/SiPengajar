@@ -20,6 +20,7 @@ import {
   Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 // ── Scroll reveal ────────────────────────────────────────
 function ScrollReveal({
@@ -122,13 +123,12 @@ function HeroMockupCard() {
       {/* Decorative blobs */}
       <motion.div
         aria-hidden
-        className="absolute rounded-full pointer-events-none"
+        className="absolute rounded-full pointer-events-none opacity-[0.28] dark:opacity-[0.45]"
         style={{
           width: 260,
           height: 260,
           background: "#3aa872",
           filter: "blur(40px)",
-          opacity: 0.28,
           top: -60,
           right: -60,
         }}
@@ -137,13 +137,12 @@ function HeroMockupCard() {
       />
       <motion.div
         aria-hidden
-        className="absolute rounded-full pointer-events-none"
+        className="absolute rounded-full pointer-events-none opacity-[0.28] dark:opacity-[0.40]"
         style={{
           width: 180,
           height: 180,
           background: "#a8d8c2",
           filter: "blur(40px)",
-          opacity: 0.28,
           bottom: -40,
           left: -40,
         }}
@@ -155,7 +154,7 @@ function HeroMockupCard() {
       {chips.map((chip) => (
         <motion.div
           key={chip.label}
-          className={`absolute z-10 flex items-center gap-2 bg-white rounded-xl px-3 py-2 text-xs font-medium text-[#144830] border border-[rgba(26,92,58,0.06)] shadow-[0_8px_24px_rgba(13,51,38,0.12)] whitespace-nowrap ${chip.pos}`}
+          className={`absolute z-10 flex items-center gap-2 bg-white dark:bg-stone-200 rounded-xl px-3 py-2 text-xs font-medium text-[#144830] dark:text-stone-800 border border-[rgba(26,92,58,0.06)] dark:border-stone-300 shadow-[0_8px_24px_rgba(13,51,38,0.12)] whitespace-nowrap ${chip.pos}`}
           initial={{ opacity: 0, scale: 0.8, y: 8 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{
@@ -179,7 +178,7 @@ function HeroMockupCard() {
       <motion.div
         animate={{ y: [0, -14, 0] }}
         transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-        className="relative z-[2] bg-white rounded-2xl border border-[rgba(26,92,58,0.07)] p-7 w-[380px] shadow-[0_32px_80px_rgba(13,51,38,0.14),0_8px_24px_rgba(13,51,38,0.08)]"
+        className="relative z-[2] bg-white rounded-2xl border border-[rgba(26,92,58,0.07)] p-7 w-[380px] shadow-[0_32px_80px_rgba(13,51,38,0.14),0_8px_24px_rgba(13,51,38,0.08)] dark:shadow-[0_0_60px_rgba(29,158,117,0.18),0_32px_80px_rgba(0,0,0,0.45)] paper-light"
       >
         {/* Card header */}
         <div className="flex items-start justify-between mb-5">
@@ -260,7 +259,7 @@ function Navbar() {
       <div className="px-16 h-[68px] flex items-center justify-between max-w-[1280px] mx-auto">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="w-[34px] h-[34px] bg-teal-600 rounded-[10px] flex items-center justify-center">
-            <Sparkles size={16} className="text-white" />
+            <Sparkles size={16} className="text-[#fff]" />
           </div>
           <span className="font-sans font-semibold text-[17px] text-stone-800 tracking-tight">
             SiPengajar
@@ -284,7 +283,9 @@ function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-3">
+          <ThemeToggle className="text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-800" />
+          <div className="w-px h-4 bg-stone-200 dark:bg-stone-700" />
           {isLoggedIn ? (
             <Button
               asChild
@@ -795,7 +796,7 @@ function Pricing() {
               )}
             >
               <motion.div
-                className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"
+                className="absolute top-0.5 w-4 h-4 bg-[#fff] rounded-full shadow-sm"
                 animate={{
                   left: period === "tahunan" ? "calc(100% - 18px)" : "2px",
                 }}
@@ -997,16 +998,16 @@ function CTABanner() {
     <section className="py-20 bg-teal-600">
       <div className="max-w-6xl mx-auto px-6 text-center">
         <ScrollReveal>
-          <h2 className="font-display text-3xl font-bold text-white mb-3">
+          <h2 className="font-display text-3xl font-bold text-[#fff] mb-3">
             Mulai buat modul ajar pertamamu — gratis
           </h2>
-          <p className="text-teal-100 text-sm mb-8 max-w-md mx-auto">
+          <p className="text-[rgba(255,255,255,0.75)] text-sm mb-8 max-w-md mx-auto">
             Bergabung dengan ribuan guru yang sudah menghemat puluhan jam setiap
             bulannya.
           </p>
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 h-11 px-6 rounded-md text-base font-medium bg-white text-teal-700 hover:bg-teal-50 transition-colors shadow-card"
+            className="inline-flex items-center gap-2 h-11 px-6 rounded-md text-base font-medium bg-[#fff] text-teal-800 hover:bg-[#f0faf7] transition-colors shadow-card"
           >
             <Sparkles size={15} />
             Coba Gratis Sekarang
@@ -1020,15 +1021,15 @@ function CTABanner() {
 // ── Footer ────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer className="bg-stone-900 text-stone-400 py-14">
+    <footer className="bg-stone-900 dark:bg-stone-50 text-stone-400 dark:text-stone-600 py-14">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid md:grid-cols-3 gap-10 mb-10">
           <div>
             <div className="flex items-center gap-2 mb-3">
               <div className="w-6 h-6 bg-teal-600 rounded flex items-center justify-center">
-                <Sparkles size={13} className="text-white" />
+                <Sparkles size={13} className="text-[#fff]" />
               </div>
-              <span className="font-display font-semibold text-base text-white">
+              <span className="font-display font-semibold text-base text-[#fff]">
                 SiPengajar
               </span>
             </div>
@@ -1040,7 +1041,7 @@ function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-stone-300 uppercase tracking-wider mb-4">
+            <p className="text-xs font-semibold text-stone-300 dark:text-stone-700 uppercase tracking-wider mb-4">
               Produk
             </p>
             <ul className="space-y-2">
@@ -1049,7 +1050,7 @@ function Footer() {
                   <li key={item}>
                     <Link
                       href="/register"
-                      className="text-sm hover:text-white transition-colors"
+                      className="text-sm hover:text-[#fff] transition-colors"
                     >
                       {item}
                     </Link>
@@ -1060,7 +1061,7 @@ function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-stone-300 uppercase tracking-wider mb-4">
+            <p className="text-xs font-semibold text-stone-300 dark:text-stone-700 uppercase tracking-wider mb-4">
               Dukungan
             </p>
             <ul className="space-y-2">
@@ -1074,7 +1075,7 @@ function Footer() {
                 <li key={item}>
                   <Link
                     href="/register"
-                    className="text-sm hover:text-white transition-colors"
+                    className="text-sm hover:text-[#fff] transition-colors"
                   >
                     {item}
                   </Link>
@@ -1084,11 +1085,11 @@ function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-stone-800 pt-6 flex items-center justify-between flex-wrap gap-3">
+        <div className="border-t border-stone-800 dark:border-stone-200 pt-6 flex items-center justify-between flex-wrap gap-3">
           <p className="text-2xs">Dibuat dengan ❤️ untuk guru-guru Indonesia</p>
           <div className="flex items-center gap-1">
             <GraduationCap size={13} className="text-teal-600" />
-            <span className="text-2xs text-teal-500">
+            <span className="text-2xs text-teal-400">
               Kurikulum Merdeka Ready
             </span>
           </div>

@@ -106,11 +106,11 @@ function HargaPageContent() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navbar */}
-      <header className="border-b border-stone-100 sticky top-0 bg-white/95 backdrop-blur-sm z-40">
+      <header className="border-b border-stone-200 sticky top-0 bg-white/95 backdrop-blur-sm z-40">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-6 h-6 bg-teal-600 rounded flex items-center justify-center">
-              <Sparkles size={13} className="text-white" />
+              <Sparkles size={13} className="text-[#fff]" />
             </div>
             <span className="font-display font-semibold text-base text-stone-900">
               SiPengajar
@@ -171,7 +171,7 @@ function HargaPageContent() {
               )}
             >
               <motion.div
-                className="absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm"
+                className="absolute top-1 w-4 h-4 bg-[#fff] rounded-full shadow-sm"
                 animate={{
                   left: period === "tahunan" ? "calc(100% - 20px)" : "4px",
                 }}
@@ -218,6 +218,7 @@ function HargaPageContent() {
                   "relative rounded-xl p-6 flex flex-col",
                   plan.cardClass,
                   plan.highlight && "shadow-md",
+                  plan.id === "gratis" && "dark:bg-stone-200 dark:border-stone-300",
                 )}
               >
                 {plan.badge && (
@@ -329,7 +330,7 @@ function HargaPageContent() {
       </main>
 
       {/* Footer strip */}
-      <footer className="border-t border-stone-100 mt-16">
+      <footer className="border-t border-stone-200 mt-16">
         <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between text-2xs text-stone-400">
           <span>© 2025 SiPengajar · Untuk guru Indonesia</span>
           <div className="flex gap-4">

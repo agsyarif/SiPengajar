@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "../styles/document-templates.css";
 
+/* ── Dark mode: class-based (overrides v4 default media-query) ── */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --sidebar-w: 240px;
 }
@@ -255,6 +258,112 @@
   }
 }
 
+/* ── Dark Mode ───────────────────────────────── */
+html.dark {
+  color-scheme: dark;
+
+  /* Stone scale — inverted: 50=darkest surface, 900=lightest text */
+  --color-stone-50:  #1a1a18;
+  --color-stone-100: #222220;
+  --color-stone-200: #2c2c2a;
+  --color-stone-300: #444441;
+  --color-stone-400: #555552;
+  --color-stone-500: #888780;
+  --color-stone-600: #a8a8a2;
+  --color-stone-700: #d0d0ca;
+  --color-stone-800: #e8e8e4;
+  --color-stone-900: #f0efeb;
+
+  /* White → dark elevated surface */
+  --color-white: #222220;
+
+  /* Teal — brighter for dark backgrounds */
+  --color-teal-50:  #0f2820;
+  --color-teal-100: #162e22;
+  --color-teal-200: #1d3d2f;
+  --color-teal-400: #3db88a;
+  --color-teal-600: #1d9e75;
+  --color-teal-800: #7dd4b0;
+  --color-teal-900: #b2e8d0;
+
+  /* Violet */
+  --color-violet-50:  #1e1a3a;
+  --color-violet-100: #252040;
+  --color-violet-400: #9b94e8;
+  --color-violet-600: #9b94e8;
+
+  /* Semantic status colors */
+  --color-success-bg:   #0f2820;
+  --color-success-text: #7dd4b0;
+  --color-success-bold: #3db88a;
+  --color-warning-bg:   #2c1f08;
+  --color-warning-text: #d4a574;
+  --color-warning-bold: #e0b67a;
+  --color-danger-bg:    #2c0f0f;
+  --color-danger-text:  #f08080;
+  --color-danger-bold:  #f5a0a0;
+  --color-info-bg:      #0f1e2c;
+  --color-info-text:    #7bafd4;
+  --color-info-bold:    #a0c8e8;
+
+  /* Shadows */
+  --shadow-card:  0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-lift:  0 4px 16px rgba(29, 158, 117, 0.15), 0 1px 4px rgba(0, 0, 0, 0.3);
+  --shadow-focus: 0 0 0 3px rgba(29, 158, 117, 0.3);
+  --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.7), 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Body background — darkest primary layer */
+html.dark body {
+  background-color: #111110;
+}
+
+/* White surfaces (safety fallback if Tailwind doesn't use var for white) */
+html.dark .bg-white {
+  background-color: #222220;
+}
+html.dark .bg-white\/90 {
+  background-color: rgba(34, 34, 32, 0.92) !important;
+}
+
+/* Scrollbar */
+html.dark ::-webkit-scrollbar-thumb {
+  background: #444441;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #555552;
+}
+
+/* Selection */
+html.dark ::selection {
+  background: #0f2820;
+  color: #7dd4b0;
+}
+
+/* Focus ring */
+html.dark :focus-visible {
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.3);
+}
+
+/* Skeleton shimmer */
+html.dark .skeleton {
+  background: linear-gradient(90deg, #1a1a18 25%, #2c2c2a 50%, #1a1a18 75%);
+  background-size: 200% 100%;
+}
+
+/* nav-item */
+html.dark .nav-item {
+  color: #888780;
+}
+html.dark .nav-item:hover {
+  background: #222220;
+  color: #f0efeb;
+}
+html.dark .nav-item.active {
+  background: #0f2820;
+  color: #1d9e75;
+}
+
 /* ── ProseMirror Editor ──────────────────────── */
 .ProseMirror.modul-ajar {
   --default-cell-min-width: 80px;
@@ -314,6 +423,75 @@
 }
 .ProseMirror.modul-ajar ul ul ul {
   list-style-type: square;
+}
+
+/* ── Paper card — selalu light (representasi dokumen export, WYSIWYG) ── */
+
+/* Reset semua CSS variable di paper card dan semua descendants */
+html.dark .paper-light,
+html.dark .paper-light * {
+  color-scheme: light;
+  --color-stone-50:  #f7f7f5;
+  --color-stone-100: #efeeea;
+  --color-stone-200: #e8e8e4;
+  --color-stone-300: #d0d0ca;
+  --color-stone-400: #a8a8a2;
+  --color-stone-500: #888780;
+  --color-stone-600: #5f5e5a;
+  --color-stone-700: #444441;
+  --color-stone-800: #2c2c2a;
+  --color-stone-900: #1a1a1a;
+  --color-white:     #ffffff;
+  --color-teal-50:   #e1f5ee;
+  --color-teal-100:  #9fe1cb;
+  --color-teal-600:  #0f6e56;
+  --color-teal-800:  #085041;
+  --color-success-bg:   #e1f5ee;
+  --color-success-text: #085041;
+  --color-warning-bg:   #faeeda;
+  --color-warning-text: #633806;
+  --color-danger-bg:    #fcebeb;
+  --color-danger-text:  #791f1f;
+  --color-info-bg:      #e6f1fb;
+  --color-info-text:    #0c447c;
+}
+
+/* Background paper card itu sendiri */
+html.dark .paper-light {
+  background-color: #ffffff;
+}
+
+/* Override bg-white di dalam paper — spesifisitas 0,3,1 > 0,2,1 */
+html.dark .paper-light .bg-white {
+  background-color: #ffffff;
+}
+
+/* ProseMirror editor di dalam paper — override dark mode styles */
+html.dark .paper-light .ProseMirror.modul-ajar {
+  color: #1a1a1a;
+  caret-color: #0f6e56;
+}
+html.dark .paper-light .ProseMirror.modul-ajar table,
+html.dark .paper-light .ProseMirror.modul-ajar td,
+html.dark .paper-light .ProseMirror.modul-ajar th {
+  border-color: #cfd8dc;
+}
+html.dark .paper-light .ProseMirror.modul-ajar th {
+  background-color: transparent;
+}
+
+/* ── ProseMirror Dark Mode ───────────────────── */
+html.dark .ProseMirror.modul-ajar {
+  caret-color: #1d9e75;
+  color: #f0efeb;
+}
+html.dark .ProseMirror.modul-ajar table,
+html.dark .ProseMirror.modul-ajar td,
+html.dark .ProseMirror.modul-ajar th {
+  border-color: #2c2c2a;
+}
+html.dark .ProseMirror.modul-ajar th {
+  background: #222220;
 }
 
 /* Cell selection overlay */

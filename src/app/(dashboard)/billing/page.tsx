@@ -202,12 +202,12 @@ export default function BillingPage() {
               className={cn(
                 "border rounded-xl overflow-hidden flex flex-col",
                 isPro
-                  ? "border-violet-300 ring-1 ring-violet-100"
+                  ? "border-violet-400 dark:border-violet-400 ring-1 ring-violet-200 dark:ring-violet-400/30"
                   : "border-violet-200",
               )}
             >
-              {/* Gradient header band */}
-              <div className="bg-linear-to-br from-violet-600 to-violet-500 px-5 pt-5 pb-4">
+              {/* Gradient header band — deep violet light, dark navy in dark mode */}
+              <div className="bg-linear-to-br from-violet-800 to-violet-600 dark:from-violet-50 dark:to-violet-100 px-5 pt-5 pb-4">
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-1.5 mb-1">
@@ -216,16 +216,16 @@ export default function BillingPage() {
                         Premium
                       </p>
                     </div>
-                    <h3 className="font-display text-xl text-white">Pro</h3>
+                    <h3 className="font-display text-xl text-[#fff]">Pro</h3>
                   </div>
                   <div className="text-right">
                     <Badge
                       variant="dark"
-                      className="bg-violet-900/40 text-violet-100 border-0"
+                      className="bg-[#ffffff]/15 text-[#fff] border-0"
                     >
                       {isPro ? "Aktif" : "Populer"}
                     </Badge>
-                    <p className="text-2xs text-violet-300 mt-1.5">
+                    <p className="text-2xs text-violet-200 mt-1.5">
                       Rp 59rb/bulan
                     </p>
                   </div>
@@ -247,8 +247,11 @@ export default function BillingPage() {
 
                 <div className="mt-5 pt-4 border-t border-stone-100">
                   {isPro ? (
-                    <div className="flex items-center gap-1.5 text-xs text-violet-700 font-medium">
-                      <Zap size={12} className="text-violet-500" />
+                    <div className="flex items-center gap-1.5 text-xs text-violet-600 dark:text-violet-400 font-medium">
+                      <Zap
+                        size={12}
+                        className="text-violet-600 dark:text-violet-400"
+                      />
                       Paket Aktif · Diperbarui 15 Jun 2025
                     </div>
                   ) : (
@@ -272,7 +275,7 @@ export default function BillingPage() {
               className={cn(
                 "bg-white border rounded-xl px-5 py-4",
                 isWarning
-                  ? "border-amber-200 bg-amber-50/40"
+                  ? "border-warning-bg bg-warning-bg/30"
                   : "border-stone-200",
               )}
             >
@@ -280,7 +283,9 @@ export default function BillingPage() {
                 <div className="flex items-center gap-2">
                   <BarChart2
                     size={14}
-                    className={isWarning ? "text-amber-500" : "text-stone-400"}
+                    className={
+                      isWarning ? "text-warning-bold" : "text-stone-400"
+                    }
                   />
                   <span className="text-sm font-medium text-stone-800">
                     Penggunaan Bulan Ini
@@ -399,9 +404,9 @@ export default function BillingPage() {
                     </p>
                   </div>
                   <Button
-                    variant="outline"
+                    variant="ghost-stone"
                     size="sm"
-                    className="border-stone-300 text-stone-600 hover:border-red-300 hover:text-red-600 shrink-0"
+                    className="hover:border-danger-bg hover:text-danger-bold hover:bg-danger-bg shrink-0"
                   >
                     Batalkan
                   </Button>
@@ -417,11 +422,7 @@ export default function BillingPage() {
                     Semua data dihapus permanen dan tidak bisa dipulihkan.
                   </p>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 shrink-0"
-                >
+                <Button variant="danger" size="sm" className="shrink-0">
                   Hapus Akun
                 </Button>
               </div>

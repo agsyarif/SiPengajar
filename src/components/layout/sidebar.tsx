@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const W_EXPANDED = 240;
 const W_COLLAPSED = 64;
@@ -100,7 +101,7 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
       }
       initial={false}
       transition={{ type: "spring", stiffness: 380, damping: 32 }}
-      className="fixed left-0 top-0 h-full bg-stone-50 border-r border-stone-200 flex flex-col z-40 overflow-visible"
+      className="fixed left-0 top-0 h-full bg-stone-50 dark:bg-[#222220] border-r border-stone-200 flex flex-col z-40 overflow-visible"
     >
       {/* ── Floating collapse toggle — sits on the border line ── */}
       {!isMobile && (
@@ -271,7 +272,7 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
         <div
           className={cn(
             "flex items-center gap-2 px-1",
-            collapsed && !isMobile && "justify-center",
+            collapsed && !isMobile && "justify-center flex-col gap-1.5",
           )}
         >
           <div className="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center text-xs font-medium text-teal-700 shrink-0">
@@ -290,6 +291,7 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
                 <p className="text-xs font-medium text-stone-800 truncate flex-1">
                   {session?.user?.name ?? "Guru"}
                 </p>
+                <ThemeToggle />
                 <button
                   onClick={() => signOut({ callbackUrl: "/login" })}
                   className="text-stone-400 hover:text-stone-700 transition-colors shrink-0"
@@ -300,6 +302,20 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Collapsed: show theme toggle + logout stacked */}
+          {collapsed && !isMobile && (
+            <>
+              <ThemeToggle />
+              <button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="w-7 h-7 flex items-center justify-center rounded-md text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+                title="Keluar"
+              >
+                <LogOut size={13} />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </motion.aside>

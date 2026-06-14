@@ -18,7 +18,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 mb-auto">
           <div className="w-6 h-6 bg-teal-600 rounded flex items-center justify-center">
-            <Sparkles size={13} className="text-white" />
+            <Sparkles size={13} className="text-[#fff]" />
           </div>
           <span className="font-display font-semibold text-base text-stone-900">
             SiPengajar
@@ -30,7 +30,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
           <div className="max-w-xs">
             {/* Decorative quote */}
             <span
-              className="block font-display text-7xl leading-none text-stone-200 select-none mb-2"
+              className="block font-display text-7xl leading-none text-stone-200 dark:text-stone-300 select-none mb-2"
               aria-hidden
             >
               ❝

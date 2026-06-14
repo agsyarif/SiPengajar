@@ -10,7 +10,7 @@ export const buttonVariants = cva(
         primary:      "bg-teal-600 text-white hover:bg-teal-800 active:bg-teal-900",
         outline:      "border border-teal-600 text-teal-600 hover:bg-teal-50",
         ghost:        "text-stone-600 hover:bg-stone-100 hover:text-stone-900",
-        danger:       "bg-danger-bg text-danger-text hover:bg-red-100",
+        danger:       "bg-danger-bg text-danger-text border border-danger-bg hover:border-danger-bold hover:text-danger-bold",
         pro:          "bg-violet-600 text-white hover:bg-violet-800",
         "ghost-stone":"border border-stone-200 text-stone-600 hover:bg-stone-100",
       },

@@ -81,7 +81,7 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
 
   return (
     <div
-      className="fixed inset-0 z-20 flex flex-col bg-[#F5F4F0] transition-[left] duration-300"
+      className="fixed inset-0 z-20 flex flex-col bg-stone-100 transition-[left] duration-300"
       style={{ left: "var(--sidebar-w, 0px)" }}
     >
       {/* ── Top bar ──────────────────────────────────────────── */}
@@ -261,7 +261,7 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ type: "spring", stiffness: 280, damping: 28 }}
-                className="max-w-185 mx-auto bg-white rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.06)] paper-container"
+                className="max-w-185 mx-auto bg-white rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.06),0_12px_40px_rgba(0,0,0,0.10)] paper-container paper-light"
               >
                 {/* App-UI header — editor-only, not in PDF */}
                 <div className="px-4 sm:px-14 pt-6 sm:pt-10 pb-5 border-b border-stone-100 rounded-t-lg overflow-hidden">

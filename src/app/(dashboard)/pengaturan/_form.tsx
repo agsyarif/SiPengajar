@@ -2,8 +2,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  User, Lock, Trash2, Check, AlertTriangle,
-  Eye, EyeOff, Sparkles, ShieldCheck, CalendarDays,
+  User,
+  Lock,
+  Trash2,
+  Check,
+  AlertTriangle,
+  Eye,
+  EyeOff,
+  Sparkles,
+  ShieldCheck,
+  CalendarDays,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -41,7 +49,9 @@ function Avatar({ name, image }: { name: string; image: string | null }) {
     .join("");
   return (
     <div className="w-16 h-16 rounded-full bg-teal-600 flex items-center justify-center ring-2 ring-white shadow">
-      <span className="font-display text-xl text-white font-semibold">{initials || "?"}</span>
+      <span className="font-display text-xl text-white font-semibold">
+        {initials || "?"}
+      </span>
     </div>
   );
 }
@@ -58,7 +68,11 @@ const PLAN_VARIANT: Record<Plan, "stone" | "violet" | "teal"> = {
   SCHOOL: "teal",
 };
 
-function SectionCard({ title, icon, children }: {
+function SectionCard({
+  title,
+  icon,
+  children,
+}: {
   title: string;
   icon: React.ReactNode;
   children: React.ReactNode;
@@ -74,12 +88,22 @@ function SectionCard({ title, icon, children }: {
   );
 }
 
-function StatusMessage({ type, msg }: { type: "success" | "error"; msg: string }) {
+function StatusMessage({
+  type,
+  msg,
+}: {
+  type: "success" | "error";
+  msg: string;
+}) {
   return (
-    <div className={cn(
-      "flex items-center gap-2 text-xs rounded-lg px-3 py-2 mt-3",
-      type === "success" ? "bg-success-bg text-success-text" : "bg-danger-bg text-danger-text"
-    )}>
+    <div
+      className={cn(
+        "flex items-center gap-2 text-xs rounded-lg px-3 py-2 mt-3",
+        type === "success"
+          ? "bg-success-bg text-success-text"
+          : "bg-danger-bg text-danger-text",
+      )}
+    >
       {type === "success" ? <Check size={12} /> : <AlertTriangle size={12} />}
       {msg}
     </div>
@@ -92,7 +116,10 @@ export function SettingsForm({ user }: Props) {
   // Profile state
   const [name, setName] = useState(user.name);
   const [profileLoading, setProfileLoading] = useState(false);
-  const [profileStatus, setProfileStatus] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+  const [profileStatus, setProfileStatus] = useState<{
+    type: "success" | "error";
+    msg: string;
+  } | null>(null);
 
   // Password state
   const [currentPw, setCurrentPw] = useState("");
@@ -100,7 +127,10 @@ export function SettingsForm({ user }: Props) {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
-  const [pwStatus, setPwStatus] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+  const [pwStatus, setPwStatus] = useState<{
+    type: "success" | "error";
+    msg: string;
+  } | null>(null);
 
   async function handleProfileSave(e: React.FormEvent) {
     e.preventDefault();
@@ -118,7 +148,10 @@ export function SettingsForm({ user }: Props) {
       setProfileStatus({ type: "success", msg: "Profil berhasil disimpan." });
       router.refresh();
     } catch (err) {
-      setProfileStatus({ type: "error", msg: err instanceof Error ? err.message : "Gagal menyimpan." });
+      setProfileStatus({
+        type: "error",
+        msg: err instanceof Error ? err.message : "Gagal menyimpan.",
+      });
     } finally {
       setProfileLoading(false);
     }
@@ -141,7 +174,10 @@ export function SettingsForm({ user }: Props) {
       setCurrentPw("");
       setNewPw("");
     } catch (err) {
-      setPwStatus({ type: "error", msg: err instanceof Error ? err.message : "Gagal mengubah password." });
+      setPwStatus({
+        type: "error",
+        msg: err instanceof Error ? err.message : "Gagal mengubah password.",
+      });
     } finally {
       setPwLoading(false);
     }
@@ -158,8 +194,12 @@ export function SettingsForm({ user }: Props) {
       <FadeInItem>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-display text-2xl font-semibold text-stone-900">Pengaturan</h1>
-            <p className="text-sm text-stone-500 mt-0.5">Kelola profil dan keamanan akunmu.</p>
+            <h1 className="font-display text-2xl font-semibold text-stone-900">
+              Pengaturan
+            </h1>
+            <p className="text-sm text-stone-500 mt-0.5">
+              Kelola profil dan keamanan akunmu.
+            </p>
           </div>
           <Badge variant={PLAN_VARIANT[user.plan]}>
             {user.plan === "PRO" && "✦ "}
@@ -173,7 +213,9 @@ export function SettingsForm({ user }: Props) {
         <div className="bg-white border border-stone-200 rounded-xl px-6 py-5 flex items-center gap-5">
           <Avatar name={user.name} image={user.image} />
           <div className="flex-1 min-w-0">
-            <p className="font-display text-lg text-stone-900 truncate">{user.name || "—"}</p>
+            <p className="font-display text-lg text-stone-900 truncate">
+              {user.name || "—"}
+            </p>
             <p className="text-sm text-stone-500 truncate">{user.email}</p>
           </div>
           <div className="shrink-0 flex flex-col items-end gap-1.5 text-right">
@@ -183,7 +225,11 @@ export function SettingsForm({ user }: Props) {
             </div>
             <div className="flex items-center gap-1.5 text-xs text-stone-400">
               <ShieldCheck size={12} />
-              <span>{user.hasPassword ? "Login email & password" : "Login via Google"}</span>
+              <span>
+                {user.hasPassword
+                  ? "Login email & password"
+                  : "Login via Google"}
+              </span>
             </div>
           </div>
         </div>
@@ -215,7 +261,9 @@ export function SettingsForm({ user }: Props) {
                 disabled
                 className="w-full h-10 px-3 rounded-lg border border-stone-200 text-sm text-stone-400 bg-stone-50 cursor-not-allowed"
               />
-              <p className="text-2xs text-stone-400 mt-1.5">Email tidak bisa diubah.</p>
+              <p className="text-2xs text-stone-400 mt-1.5">
+                Email tidak bisa diubah.
+              </p>
             </div>
             {profileStatus && <StatusMessage {...profileStatus} />}
             <div className="flex justify-end">
@@ -238,8 +286,9 @@ export function SettingsForm({ user }: Props) {
             <div className="flex items-start gap-3 text-sm text-stone-500">
               <Sparkles size={15} className="text-teal-500 mt-0.5 shrink-0" />
               <p>
-                Akunmu terhubung via <span className="font-medium text-stone-700">Google OAuth</span>.
-                Penggantian password tidak tersedia untuk metode login ini.
+                Akunmu terhubung via{" "}
+                <span className="font-medium text-stone-700">Google OAuth</span>
+                . Penggantian password tidak tersedia untuk metode login ini.
               </p>
             </div>
           ) : (
@@ -284,7 +333,9 @@ export function SettingsForm({ user }: Props) {
                   </button>
                 </div>
                 {newPw.length > 0 && newPw.length < 8 && (
-                  <p className="text-2xs text-amber-600 mt-1">Minimal 8 karakter</p>
+                  <p className="text-2xs text-amber-600 mt-1">
+                    Minimal 8 karakter
+                  </p>
                 )}
               </div>
               {pwStatus && <StatusMessage {...pwStatus} />}
@@ -307,7 +358,9 @@ export function SettingsForm({ user }: Props) {
         <div className="border border-stone-200 rounded-xl overflow-hidden">
           <div className="flex items-center gap-2 px-6 py-4 border-b border-stone-100 bg-stone-50/60">
             <AlertTriangle size={14} className="text-stone-400" />
-            <h2 className="text-sm font-semibold text-stone-700">Zona Berbahaya</h2>
+            <h2 className="text-sm font-semibold text-stone-700">
+              Zona Berbahaya
+            </h2>
           </div>
           <div className="px-6 py-5 bg-white flex items-center justify-between">
             <div>
@@ -316,12 +369,15 @@ export function SettingsForm({ user }: Props) {
                 Semua data dihapus permanen dan tidak bisa dipulihkan.
               </p>
             </div>
-            <Button
+            {/* <Button
               variant="outline"
               size="sm"
               className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 shrink-0"
             >
               <Trash2 size={13} />
+              Hapus Akun
+            </Button> */}
+            <Button variant="danger" size="sm" className="shrink-0">
               Hapus Akun
             </Button>
           </div>

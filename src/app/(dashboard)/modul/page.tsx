@@ -2,7 +2,13 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Plus, BookOpen, CheckCircle2, FileEdit, Loader2 } from "lucide-react";
+import {
+  Plus,
+  BookOpen,
+  CheckCircle2,
+  FileEdit,
+  LoaderCircle,
+} from "lucide-react";
 import { buttonVariants } from "@/lib/button-variants";
 import { FadeIn } from "@/components/motion/fade-in";
 import { ModulListClient } from "@/components/modul/modul-list-client";
@@ -32,9 +38,9 @@ export default async function ModulPage() {
 
   const moduls = await getUserModuls(session.user.id);
 
-  const total      = moduls.length;
-  const done       = moduls.filter((m) => m.status === "DONE").length;
-  const draft      = moduls.filter((m) => m.status === "DRAFT").length;
+  const total = moduls.length;
+  const done = moduls.filter((m) => m.status === "DONE").length;
+  const draft = moduls.filter((m) => m.status === "DRAFT").length;
   const processing = moduls.filter((m) => m.status === "PROCESSING").length;
 
   return (
@@ -47,7 +53,9 @@ export default async function ModulPage() {
               Semua Modul Ajar
             </h1>
             <p className="text-sm text-stone-500 mt-1">
-              {total > 0 ? `${total} modul tersimpan` : "Belum ada modul — buat yang pertama!"}
+              {total > 0
+                ? `${total} modul tersimpan`
+                : "Belum ada modul — buat yang pertama!"}
             </p>
           </div>
           <Link href="/modul/baru" className={buttonVariants()}>
@@ -78,59 +86,86 @@ export default async function ModulPage() {
                 iconBg: "bg-teal-50",
                 iconColor: "text-teal-600",
                 valueColor: "text-teal-700",
-                bar: { width: total ? (done / total) * 100 : 0, color: "bg-teal-500" },
+                bar: {
+                  width: total ? (done / total) * 100 : 0,
+                  color: "bg-teal-500",
+                },
               },
               {
                 label: "Draft",
                 value: draft,
                 icon: FileEdit,
-                iconBg: "bg-amber-50",
-                iconColor: "text-amber-500",
-                valueColor: "text-amber-700",
-                bar: { width: total ? (draft / total) * 100 : 0, color: "bg-amber-400" },
+                iconBg: "bg-violet-50",
+                iconColor: "text-violet-600",
+                valueColor: "text-violet-600",
+                bar: {
+                  width: total ? (draft / total) * 100 : 0,
+                  color: "bg-violet-400",
+                },
               },
               {
                 label: "Diproses",
                 value: processing,
-                icon: Loader2,
-                iconBg: "bg-blue-50",
-                iconColor: "text-blue-500",
-                valueColor: "text-blue-700",
-                bar: { width: total ? (processing / total) * 100 : 0, color: "bg-blue-400" },
+                icon: LoaderCircle,
+                iconBg: "bg-info-bg",
+                iconColor: "text-info-bold",
+                valueColor: "text-info-bold",
+                bar: {
+                  width: total ? (processing / total) * 100 : 0,
+                  color: "bg-info-bold",
+                },
               },
-            ].map(({ label, value, icon: Icon, iconBg, iconColor, valueColor, bar }) => (
-              <div
-                key={label}
-                className="bg-white border border-stone-200 rounded-xl px-4 py-3.5 flex flex-col gap-3"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-stone-500 font-medium">{label}</span>
-                  <span className={`flex items-center justify-center w-7 h-7 rounded-lg ${iconBg}`}>
-                    <Icon size={14} className={iconColor} />
-                  </span>
+            ].map(
+              ({
+                label,
+                value,
+                icon: Icon,
+                iconBg,
+                iconColor,
+                valueColor,
+                bar,
+              }) => (
+                <div
+                  key={label}
+                  className="bg-white border border-stone-200 rounded-xl px-4 py-3.5 flex flex-col gap-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-stone-500 font-medium">
+                      {label}
+                    </span>
+                    <span
+                      className={`flex items-center justify-center w-7 h-7 rounded-lg ${iconBg}`}
+                    >
+                      <Icon size={14} className={iconColor} />
+                    </span>
+                  </div>
+                  <div>
+                    <p
+                      className={`text-2xl font-semibold font-display leading-none ${valueColor}`}
+                    >
+                      {value}
+                    </p>
+                    {bar && (
+                      <div className="mt-2.5 h-1 w-full rounded-full bg-stone-100">
+                        <div
+                          className={`h-1 rounded-full transition-all duration-500 ${bar.color}`}
+                          style={{ width: `${bar.width}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <p className={`text-2xl font-semibold font-display leading-none ${valueColor}`}>
-                    {value}
-                  </p>
-                  {bar && (
-                    <div className="mt-2.5 h-1 w-full rounded-full bg-stone-100">
-                      <div
-                        className={`h-1 rounded-full transition-all duration-500 ${bar.color}`}
-                        style={{ width: `${bar.width}%` }}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </FadeIn>
       )}
 
       {/* Client list (search + filter + delete) */}
       <FadeIn delay={0.1}>
-        <ModulListClient moduls={moduls as Parameters<typeof ModulListClient>[0]["moduls"]} />
+        <ModulListClient
+          moduls={moduls as Parameters<typeof ModulListClient>[0]["moduls"]}
+        />
       </FadeIn>
     </div>
   );
