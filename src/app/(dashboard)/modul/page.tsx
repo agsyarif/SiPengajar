@@ -41,7 +41,7 @@ export default async function ModulPage() {
     <div className="space-y-6">
       {/* Header */}
       <FadeIn>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <h1 className="font-display text-2xl font-semibold text-stone-900">
               Semua Modul Ajar
@@ -60,7 +60,7 @@ export default async function ModulPage() {
       {/* Stats strip */}
       {total > 0 && (
         <FadeIn delay={0.05}>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { label: "Total",   value: total,      accent: false },
               { label: "Selesai", value: done,        accent: true  },

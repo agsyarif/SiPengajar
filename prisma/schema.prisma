@@ -15,6 +15,7 @@ model User {
   password      String?
   plan          Plan      @default(FREE)
   planExpiresAt DateTime?
+  schoolName    String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -44,9 +45,22 @@ model Modul {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  design ModulDesign?
 
   @@map("moduls")
+}
+
+model ModulDesign {
+  id        String   @id @default(cuid())
+  modulId   String   @unique
+  template  String   @default("formal")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  modul Modul @relation(fields: [modulId], references: [id], onDelete: Cascade)
+
+  @@map("modul_designs")
 }
 
 model Subject {
@@ -120,4 +134,75 @@ enum ModulStatus {
   PROCESSING
   DRAFT
   DONE
+}
+
+model LearningOutcome {
+  id        String   @id @default(cuid())
+  subject   String
+  phase     String
+  level     String
+  elements  LearningOutcomeElement[]
+  chapters  Chapter[]
+  createdAt DateTime @default(now())
+
+  @@unique([subject, phase])
+  @@map("learning_outcomes")
+}
+
+model LearningOutcomeElement {
+  id               String          @id @default(cuid())
+  learningOutcomeId String
+  name             String
+  description      String          @db.Text
+  learningOutcome  LearningOutcome @relation(fields: [learningOutcomeId], references: [id], onDelete: Cascade)
+
+  @@map("learning_outcome_elements")
+}
+
+model Chapter {
+  id               String          @id @default(cuid())
+  learningOutcomeId String
+  number           Int
+  name             String
+  grade            String
+  semester         Int
+  objectives       LearningObjective[]
+  learningOutcome  LearningOutcome @relation(fields: [learningOutcomeId], references: [id], onDelete: Cascade)
+
+  @@map("chapters")
+}
+
+model LearningObjective {
+  id                  String         @id @default(cuid())
+  chapterId           String
+  code                String         @unique
+  title               String         @db.Text
+  shortTitle          String
+  soloLevel           SoloLevel
+  allocationHours     Int
+  learningFlow        LearningFlow[]
+  formativeAssessment String         @db.Text
+  summativeAssessment String         @db.Text
+  profileDimensions   String[]
+  cpElements          String[]
+  chapter             Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@map("learning_objectives")
+}
+
+model LearningFlow {
+  id                  String            @id @default(cuid())
+  learningObjectiveId String
+  sequence            Int
+  phase               String
+  description         String            @db.Text
+  learningObjective   LearningObjective @relation(fields: [learningObjectiveId], references: [id], onDelete: Cascade)
+
+  @@map("learning_flows")
+}
+
+enum SoloLevel {
+  MULTISTRUCTURAL
+  RELATIONAL
+  EXTENDED_ABSTRACT
 }

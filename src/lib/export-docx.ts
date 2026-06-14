@@ -241,7 +241,7 @@ async function injectHeaderFooter(
 }
 
 // ── CSS injected into the HTML body ──────────────────────
-const MODUL_CSS = `
+export const MODUL_CSS = `
   * { font-family: Arial, sans-serif; box-sizing: border-box; }
   body { font-size: 11pt; line-height: 1.5; color: #212121; margin: 0; padding: 0; }
 

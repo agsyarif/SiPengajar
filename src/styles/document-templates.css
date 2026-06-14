@@ -1,0 +1,461 @@
+/* ============================================================
+   sipengajar.id — Document Template CSS
+   ============================================================ */
+
+.paper-container {
+  background: #ffffff;
+  width: 100%;
+  max-width: 210mm;
+}
+
+/* ── KOP SEKOLAH ── */
+.kop-sekolah {
+  display: none;
+}
+.export-mode .kop-sekolah {
+  display: block;
+  margin-bottom: 16pt;
+  border-bottom: 2px solid #1b5e80;
+  padding-bottom: 12pt;
+}
+.kop-sekolah.formal {
+  font-family: "Times New Roman", Georgia, serif;
+}
+.kop-sekolah.formal .kop-school-name {
+  font-size: 14pt;
+  font-weight: 700;
+  color: #1b5e80;
+  margin: 0 0 2pt;
+  text-align: center;
+  text-transform: uppercase;
+}
+.kop-sekolah.formal .kop-address {
+  font-size: 9pt;
+  color: #444;
+  text-align: center;
+  margin: 0;
+}
+.kop-sekolah.modern {
+  font-family: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+}
+.kop-sekolah.modern .kop-school-name {
+  font-size: 13pt;
+  font-weight: 700;
+  color: #0f6e56;
+  margin: 0 0 2pt;
+}
+.kop-sekolah.modern .kop-address {
+  font-size: 9pt;
+  color: #888;
+  margin: 0;
+}
+
+/* ── FONT WRAPPERS ── */
+.doc-body.formal {
+  font-family: "Times New Roman", Georgia, serif;
+}
+.doc-body.formal .modul-ajar {
+  font-family: "Times New Roman", Georgia, serif;
+}
+.doc-body.modern {
+  font-family: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+}
+.doc-body.modern .modul-ajar {
+  font-family: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ============================================================
+   UNIVERSAL FIX: <p> di dalam <td>
+   ============================================================ */
+.modul-content table td p,
+.modul-content table th p {
+  margin: 0;
+  padding: 0;
+}
+.modul-content table td p + p {
+  margin-top: 5px;
+}
+.modul-content table td ul,
+.modul-content table td ol {
+  margin: 0;
+  padding-left: 16px;
+}
+.modul-content table td li {
+  margin-bottom: 3px;
+}
+.modul-content table td li:last-child {
+  margin-bottom: 0;
+}
+.modul-content table td br {
+  line-height: 1.6;
+}
+.modul-content table td strong {
+  font-weight: 600;
+}
+
+/* ============================================================
+   TEMPLATE FORMAL
+   ============================================================ */
+
+.formal .header-box {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid #333;
+  margin-bottom: 18px;
+  text-align: center;
+  background: #f7f7f7;
+}
+.formal .header-box td {
+  padding: 14px 20px;
+}
+.formal .header-label {
+  font-size: 9pt;
+  color: #555;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.formal .header-mapel {
+  font-size: 15pt;
+  font-weight: 700;
+  margin: 3px 0;
+}
+.formal .header-topik {
+  font-size: 12pt;
+  font-weight: 600;
+  margin: 2px 0;
+}
+.formal .header-subtitle {
+  font-size: 9pt;
+  color: #555;
+  font-style: italic;
+  margin: 5px 0 0;
+}
+
+.formal .summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.formal .summary-cell {
+  border: 0.75px solid #888;
+  padding: 6px 10px;
+  text-align: center;
+  width: 25%;
+}
+.formal .summary-label {
+  font-size: 8.5pt;
+  color: #555;
+  margin: 0 0 2px;
+}
+.formal .summary-value {
+  font-size: 10pt;
+  font-weight: 700;
+  margin: 0;
+}
+
+.formal .section-header {
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: #e8e8e8;
+  padding: 6px 10px;
+  border-left: 4px solid #111;
+  margin: 22px 0 12px;
+  color: #111;
+}
+.formal .subsection-title {
+  font-size: 10.5pt;
+  font-weight: 700;
+  border-bottom: 0.75px solid #bbb;
+  padding-bottom: 4px;
+  margin: 14px 0 8px;
+}
+
+.formal .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+}
+.formal .data-table td {
+  border: 0.75px solid #777;
+  padding: 5px 10px;
+  font-size: 10.5pt;
+  vertical-align: top;
+}
+.formal .label-cell {
+  background: #f0f0f0;
+  font-weight: 600;
+  width: 35%;
+}
+
+.formal .activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 12px;
+}
+.formal .activity-table th {
+  background: #e8e8e8;
+  border: 0.75px solid #777;
+  padding: 5px 8px;
+  font-weight: 700;
+  text-align: center;
+  font-size: 10pt;
+}
+.formal .activity-table td {
+  border: 0.75px solid #aaa;
+  padding: 6px 8px;
+  font-size: 10pt;
+  vertical-align: top;
+}
+.formal .phase-cell {
+  font-weight: 600;
+  text-align: center;
+  width: 16%;
+}
+.formal .time-cell {
+  text-align: center;
+  width: 12%;
+}
+
+.formal .meeting-header {
+  font-size: 10.5pt;
+  font-weight: 700;
+  border-bottom: 1px solid #333;
+  padding-bottom: 4px;
+  margin: 18px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.formal .meeting-goal {
+  font-size: 10pt;
+  margin: 0 0 8px;
+  padding: 5px 10px;
+  background: #f9f9f9;
+  border-left: 3px solid #bbb;
+}
+.formal .assessment-note {
+  font-size: 10pt;
+  border-left: 3px solid #666;
+  padding-left: 10px;
+  margin: 8px 0;
+  color: #333;
+}
+
+/* ============================================================
+   TEMPLATE MODERN
+   Layout SAMA dengan Formal (tabel biasa).
+   Hanya design yang berbeda: warna, font, border style.
+   ============================================================ */
+
+/* header-box disembunyikan — info sudah ada di export header */
+.modern .header-box {
+  display: none;
+}
+
+/* ── summary-table: layout normal, design Modern ── */
+.modern .summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border-top: 2px solid #1d9e75;
+  border-bottom: 1px solid #d4efe7;
+}
+.modern .summary-cell {
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: middle;
+  border-right: 1px solid #e8f7f3;
+  width: 25%;
+}
+.modern .summary-cell:last-child {
+  border-right: none;
+}
+.modern .summary-label {
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: #1d9e75;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 2px;
+}
+.modern .summary-value {
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+/* ── section headers ── */
+.modern .section-header {
+  font-size: 8.5pt;
+  font-weight: 700;
+  color: #085041;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-left: 3px solid #1d9e75;
+  padding-left: 8px;
+  margin: 24px 0 10px;
+  background: transparent;
+}
+.modern .subsection-title {
+  font-size: 9.5pt;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 14px 0 6px;
+  border-bottom: none;
+  padding: 0;
+}
+
+/* ── data-table: layout normal, border minimal ── */
+.modern .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+}
+.modern .data-table td {
+  padding: 7px 10px;
+  font-size: 10pt;
+  vertical-align: top;
+  border-bottom: 0.5px solid #efefef;
+}
+.modern .data-table tr:last-child td {
+  border-bottom: none;
+}
+.modern .label-cell {
+  background: #f0faf7;
+  color: #085041;
+  font-weight: 600;
+  font-size: 8.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: 35%;
+}
+
+/* ── activity-table: layout 3 kolom normal, header hijau ──
+   TIDAK ada grid/card transformation.
+   Yang berbeda dari Formal: warna header, border style, phase-cell accent.
+*/
+.modern .activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 14px;
+}
+.modern .activity-table thead {
+  display: table-header-group;
+}
+.modern .activity-table thead th {
+  background: #085041;
+  color: #ffffff;
+  padding: 7px 10px;
+  font-size: 9pt;
+  font-weight: 600;
+  text-align: left;
+  border: none;
+  letter-spacing: 0.02em;
+}
+.modern .activity-table thead th:first-child,
+.modern .activity-table thead th:nth-child(2) {
+  text-align: center;
+}
+
+.modern .activity-table tbody {
+  display: table-row-group;
+}
+.modern .activity-table tr {
+  display: table-row;
+}
+.modern .activity-table td {
+  display: table-cell;
+  padding: 8px 10px;
+  font-size: 9.5pt;
+  vertical-align: top;
+  border-bottom: 0.5px solid #efefef;
+}
+.modern .activity-table tr:last-child td {
+  border-bottom: none;
+}
+
+.modern .phase-cell {
+  font-weight: 700;
+  text-align: center;
+  width: 14%;
+  font-size: 8.5pt;
+}
+.modern .time-cell {
+  text-align: center;
+  width: 10%;
+  font-size: 8.5pt;
+  color: #555;
+}
+
+/* Warna aksen fase — hanya di phase-cell, bukan seluruh row */
+.modern .activity-table tbody tr:nth-child(1) .phase-cell {
+  color: #92400e;
+  background: #fff8f0;
+}
+.modern .activity-table tbody tr:nth-child(2) .phase-cell {
+  color: #065f46;
+  background: #f0faf7;
+}
+.modern .activity-table tbody tr:nth-child(3) .phase-cell {
+  color: #3730a3;
+  background: #f0f4ff;
+}
+
+/* ── meeting ── */
+.modern .meeting-header {
+  font-size: 9pt;
+  font-weight: 700;
+  color: white;
+  background: #085041;
+  padding: 8px 12px;
+  border-radius: 6px 6px 0 0;
+  margin: 16px 0 0;
+  text-transform: uppercase;
+}
+.modern .meeting-goal {
+  font-size: 9.5pt;
+  padding: 8px 12px;
+  background: #f0faf7;
+  border-radius: 0 0 6px 6px;
+  margin: 0 0 10px;
+  border: 1px solid #b2ddd4;
+  border-top: none;
+}
+.modern .assessment-note {
+  background: #f0faf7;
+  border-left: 3px solid #1d9e75;
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-size: 9.5pt;
+}
+
+/* ============================================================
+   PRINT CSS
+   ============================================================ */
+@media print {
+  .paper-container {
+    max-width: none;
+    width: 100%;
+  }
+  .formal .data-table,
+  .formal .activity-table,
+  .formal .meeting-header,
+  .formal .meeting-goal {
+    break-inside: avoid;
+  }
+  .formal .activity-table tr {
+    break-inside: avoid;
+  }
+  .modern .data-table,
+  .modern .activity-table,
+  .modern .meeting-header,
+  .modern .meeting-goal {
+    break-inside: avoid;
+  }
+  .modern .activity-table tr {
+    break-inside: avoid;
+  }
+}

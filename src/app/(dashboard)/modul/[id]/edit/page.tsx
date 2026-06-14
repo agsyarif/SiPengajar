@@ -10,7 +10,13 @@ export default async function ModulEditPage({ params }: { params: Params }) {
   if (!session?.user?.id) redirect("/login");
 
   const { id } = await params;
-  const modul = await prisma.modul.findUnique({ where: { id } });
+  const modul = await prisma.modul.findUnique({
+    where: { id },
+    include: {
+      design: { select: { template: true } },
+      user: { select: { schoolName: true } },
+    },
+  });
 
   if (!modul || modul.userId !== session.user.id) notFound();
 
@@ -30,6 +36,8 @@ export default async function ModulEditPage({ params }: { params: Params }) {
         menit: modul.menit,
         status: modul.status,
         content: modul.content ?? "",
+        template: modul.design?.template ?? "formal",
+        schoolName: modul.user?.schoolName ?? "",
       }}
     />
   );

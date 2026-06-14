@@ -23,7 +23,7 @@ export default async function DashboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <FadeIn>
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between flex-wrap gap-3">
           <div>
             <h1 className="font-display text-2xl font-semibold text-stone-900">
               Selamat datang kembali 👋
@@ -45,7 +45,7 @@ export default async function DashboardPage() {
 
       {/* Stats */}
       <FadeIn delay={0.06}>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
             { value: "3", label: "Modul bulan ini", sub: "3 dari 5 tersisa" },
             { value: "2", label: "Draft belum selesai", sub: "Lanjutkan editing" },

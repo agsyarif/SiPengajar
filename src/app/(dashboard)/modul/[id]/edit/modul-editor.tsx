@@ -24,7 +24,10 @@ import {
   EditorToolbar,
 } from "@/components/features/editor/tiptap-editor";
 import { EditorBubbleMenu } from "@/components/features/editor/editor-bubble-menu";
-import { printAsPDF } from "@/lib/export-pdf";
+import {
+  TemplatePicker,
+  type TemplateId,
+} from "@/components/editor/TemplatePicker";
 import type { Editor } from "@tiptap/react";
 import { getMapelColor, cn } from "@/lib/utils";
 
@@ -42,6 +45,8 @@ interface ModulData {
   menit: number;
   status: string;
   content: string;
+  template: string;
+  schoolName: string;
 }
 
 const INFO_ROWS = (m: ModulData) => [
@@ -64,24 +69,17 @@ const INFO_ROWS = (m: ModulData) => [
 export function ModulEditor({ modul }: { modul: ModulData }) {
   const [panelOpen, setPanelOpen] = useState(false);
   const [editor, setEditor] = useState<Editor | null>(null);
+  const [template, setTemplate] = useState<TemplateId>(
+    (modul.template as TemplateId) ?? "formal",
+  );
   const color = getMapelColor(modul.mapel);
   const isProcessing = modul.status === "PROCESSING";
   const hasContent = !isProcessing && !!modul.content;
 
-  const handleExportPDF = () => {
-    const content = editor ? editor.getHTML() : modul.content;
-    printAsPDF(content, modul.judul, {
-      mapel: modul.mapel,
-      jenjang: modul.jenjang,
-      kelas: modul.kelas,
-      topik: modul.topik,
-    });
-  };
-
   return (
     <div
       className="fixed inset-0 z-20 flex flex-col bg-[#F5F4F0] transition-[left] duration-300"
-      style={{ left: "var(--sidebar-w, 240px)" }}
+      style={{ left: "var(--sidebar-w, 0px)" }}
     >
       {/* ── Top bar ──────────────────────────────────────────── */}
       <header className="shrink-0 h-12 bg-white/90 backdrop-blur-md border-b border-stone-200/80 flex items-center px-4 gap-3">
@@ -115,15 +113,23 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
         <div className="flex items-center gap-1.5 shrink-0">
           {hasContent && (
             <>
+              <TemplatePicker
+                value={template}
+                modulId={modul.id}
+                onChange={setTemplate}
+              />
+              <div className="w-px h-4 bg-stone-200 shrink-0" />
               <Button variant="ghost-stone" size="sm" asChild>
                 <a href={`/api/modul/${modul.id}/export?format=docx`} download>
                   <Download size={13} />
                   <span className="hidden sm:inline">DOCX</span>
                 </a>
               </Button>
-              <Button variant="ghost-stone" size="sm" onClick={handleExportPDF}>
-                <Printer size={13} />
-                <span className="hidden sm:inline">PDF</span>
+              <Button variant="ghost-stone" size="sm" asChild>
+                <a href={`/api/modul/${modul.id}/export?format=pdf`} download>
+                  <Printer size={13} />
+                  <span className="hidden sm:inline">PDF</span>
+                </a>
               </Button>
             </>
           )}
@@ -214,9 +220,10 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ type: "spring", stiffness: 280, damping: 28 }}
-                className="max-w-185 mx-auto bg-white rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.06)]"
+                className="max-w-185 mx-auto bg-white rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.06)] paper-container"
               >
-                <div className="px-14 pt-10 pb-5 border-b border-stone-100 rounded-t-lg overflow-hidden">
+                {/* App-UI header — editor-only, not in PDF */}
+                <div className="px-4 sm:px-14 pt-6 sm:pt-10 pb-5 border-b border-stone-100 rounded-t-lg overflow-hidden">
                   <div className="flex items-center gap-2 mb-3">
                     <Badge variant={color}>{modul.mapel}</Badge>
                     <span className="text-2xs text-stone-400">
@@ -235,11 +242,22 @@ export function ModulEditor({ modul }: { modul: ModulData }) {
                   </p>
                 </div>
 
-                <TipTapEditor
-                  content={modul.content}
-                  modulId={modul.id}
-                  onEditorReady={setEditor}
-                />
+                {/* Template-scoped document body */}
+                <div className={`doc-body ${template}`}>
+                  {/* Kop: hidden in editor via CSS, shown in PDF via .export-mode */}
+                  <div className={`kop-sekolah ${template}`}>
+                    <div className="kop-school-name">
+                      {modul.schoolName || "Nama Sekolah"}
+                    </div>
+                    <div className="kop-address">sipengajar.id</div>
+                  </div>
+
+                  <TipTapEditor
+                    content={modul.content}
+                    modulId={modul.id}
+                    onEditorReady={setEditor}
+                  />
+                </div>
               </motion.div>
 
               <div className="h-20" />

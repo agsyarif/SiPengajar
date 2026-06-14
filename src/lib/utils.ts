@@ -29,6 +29,7 @@ export const MAPEL_COLORS: Record<
   "Bahasa Indonesia": "warning",
   "Bahasa Inggris": "info",
   PPKn: "violet",
+  Antropologi: "stone",
   "Seni Budaya": "violet",
   PJOK: "teal",
   default: "stone",

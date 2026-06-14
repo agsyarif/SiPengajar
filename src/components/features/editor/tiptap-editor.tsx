@@ -380,6 +380,7 @@ interface TipTapEditorProps {
   modulId: string;
   onChange?: (html: string) => void;
   onEditorReady?: (editor: Editor | null) => void;
+  contentClassName?: string;
 }
 
 export { EditorToolbar };
@@ -389,6 +390,7 @@ export function TipTapEditor({
   modulId,
   onChange,
   onEditorReady,
+  contentClassName,
 }: TipTapEditorProps) {
   const { saveStatus, triggerSave } = useAutoSave(modulId);
 
@@ -411,7 +413,9 @@ export function TipTapEditor({
     content: normalizeModulHTML(content),
     editorProps: {
       attributes: {
-        class: "modul-ajar min-h-[calc(100vh-200px)] outline-none px-14 py-10",
+        class:
+          contentClassName ??
+          "modul-ajar min-h-[calc(100vh-200px)] outline-none px-4 sm:px-14 py-6 sm:py-10",
       },
     },
     onUpdate: ({ editor }) => {

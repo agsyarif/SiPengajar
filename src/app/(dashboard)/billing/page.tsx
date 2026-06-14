@@ -81,7 +81,7 @@ export default function BillingPage() {
 
         {/* ── Stats Strip ── */}
         <FadeInItem>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               {
                 label: "Paket Aktif",
@@ -139,7 +139,7 @@ export default function BillingPage() {
 
         {/* ── Plan Cards ── */}
         <FadeInItem>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Free Card */}
             <div
               className={cn(
@@ -317,7 +317,7 @@ export default function BillingPage() {
 
         {/* ── Payment History ── */}
         <FadeInItem>
-          <div className="bg-white border border-stone-200 rounded-xl overflow-hidden">
+          <div className="bg-white border border-stone-200 rounded-xl overflow-x-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b border-stone-100">
               <div className="flex items-center gap-2">
                 <Receipt size={14} className="text-stone-400" />

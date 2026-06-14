@@ -43,6 +43,22 @@ export async function PATCH(req: NextRequest, { params }: { params: Params }) {
   }
 
   const updated = await prisma.modul.update({ where: { id }, data });
+
+  if ("template" in body && typeof body.template === "string") {
+    await prisma.modulDesign.upsert({
+      where: { modulId: id },
+      update: { template: body.template },
+      create: { modulId: id, template: body.template },
+    });
+  }
+
+  if ("schoolName" in body && typeof body.schoolName === "string") {
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: { schoolName: body.schoolName },
+    });
+  }
+
   return NextResponse.json({ data: updated });
 }
 

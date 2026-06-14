@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -61,12 +61,28 @@ export function BuatModulForm({
   mapelList: { id: string; name: string }[];
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const fromTP = searchParams.get("from_objective") === "true";
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [showExtra, setShowExtra] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
   const mapelOptions = mapelList.map((m) => ({ value: m.name, label: m.name }));
+
+  const tpDefaultValues = fromTP
+    ? {
+        mapel: searchParams.get("mapel") ?? "",
+        jenjang: searchParams.get("jenjang") ?? "",
+        kelas: searchParams.get("kelas") ?? "",
+        topik: searchParams.get("topik") ?? "",
+        tujuan: searchParams.get("tujuan") ?? "",
+        pertemuan: Number(searchParams.get("alokasi")) || 2,
+        menit: 45,
+        model: "",
+      }
+    : {};
 
   const {
     register,
@@ -77,6 +93,7 @@ export function BuatModulForm({
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
+    defaultValues: tpDefaultValues,
   });
 
   const jenjang = watch("jenjang");
@@ -148,10 +165,27 @@ export function BuatModulForm({
       </FadeIn>
 
       <form onSubmit={handleSubmit(onSubmit)}>
+        {fromTP && (
+          <FadeIn delay={0.04}>
+            <div
+              className="flex items-center gap-2 bg-teal-50 border border-teal-100
+                          rounded-lg px-4 py-2.5 mb-4"
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-teal-600 flex-shrink-0" />
+              <p className="text-xs text-teal-700">
+                Form diisi otomatis dari TP{" "}
+                <span className="font-mono font-medium">
+                  {searchParams.get("tp_code")}
+                </span>
+                . Kamu bisa edit sebelum generate.
+              </p>
+            </div>
+          </FadeIn>
+        )}
         <FadeIn delay={0.06}>
           <div className="bg-white border border-stone-200 rounded-xl p-6">
             {/* ── Row 1: Mapel + Model ── */}
-            <div className="grid grid-cols-2 gap-5 mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
               <div>
                 <label className="text-xs font-medium text-stone-700 mb-1.5 block">
                   Mata Pelajaran <span className="text-danger-bold">*</span>
@@ -199,7 +233,7 @@ export function BuatModulForm({
             </div>
 
             {/* ── Row 2: Jenjang + Kelas + Fase + Alokasi ── */}
-            <div className="grid grid-cols-4 gap-4 mb-5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
               <div>
                 <label className="text-xs font-medium text-stone-700 mb-1.5 block">
                   Jenjang <span className="text-danger-bold">*</span>
@@ -300,7 +334,7 @@ export function BuatModulForm({
             <div className="border-t border-stone-100 mb-5" />
 
             {/* ── Row 3: Topik + Tujuan ── */}
-            <div className="grid grid-cols-2 gap-5 mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
               <div>
                 <label className="text-xs font-medium text-stone-700 mb-1.5 block">
                   Topik / Materi Utama{" "}
