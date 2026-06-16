@@ -4,6 +4,7 @@ import pg from "pg";
 import * as dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env.production" });
 
 const url = process.env.DATABASE_URL!;
 const parsed = new URL(url);
