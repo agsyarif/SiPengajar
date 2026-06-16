@@ -39,9 +39,10 @@ export default async function ModulPage() {
   const moduls = await getUserModuls(session.user.id);
 
   const total = moduls.length;
-  const done = moduls.filter((m) => m.status === "DONE").length;
-  const draft = moduls.filter((m) => m.status === "DRAFT").length;
-  const processing = moduls.filter((m) => m.status === "PROCESSING").length;
+  type Modul = Awaited<ReturnType<typeof getUserModuls>>[number];
+  const done = moduls.filter((m: Modul) => m.status === "DONE").length;
+  const draft = moduls.filter((m: Modul) => m.status === "DRAFT").length;
+  const processing = moduls.filter((m: Modul) => m.status === "PROCESSING").length;
 
   return (
     <div className="space-y-6">
