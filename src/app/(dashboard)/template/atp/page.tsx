@@ -60,7 +60,7 @@ export default async function ATPPage() {
       )}
 
       <FadeInStagger staggerDelay={0.08}>
-        {cps.map((cp) => (
+        {cps.map((cp: (typeof cps)[number]) => (
           <FadeInItem key={cp.id}>
             <div className="mb-8">
               <LearningPathRail cp={cp as unknown as LearningOutcomeWithChapters} />
