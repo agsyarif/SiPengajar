@@ -7,17 +7,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  plan          Plan      @default(FREE)
-  planExpiresAt DateTime?
-  schoolName    String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id               String    @id @default(cuid())
+  name             String?
+  email            String    @unique
+  emailVerified    DateTime?
+  image            String?
+  password         String?
+  role             Role      @default(USER)
+  plan             Plan      @default(FREE)
+  planExpiresAt    DateTime?
+  schoolName       String?
+  tokenRevokedAt   DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   accounts Account[]
   sessions Session[]
@@ -122,6 +124,11 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 enum Plan {

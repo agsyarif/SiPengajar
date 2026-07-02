@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "migrate": "prisma migrate deploy",
-    "seed": "npx tsx prisma/seed-atp.ts"
+    "seed": "npx tsx prisma/seed-atp.ts",
+    "seed:admin": "npx tsx prisma/seed-admin.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed-atp.ts"

@@ -1,10 +1,12 @@
-export type Plan = "free" | "pro" | "team";
+export type Plan = "FREE" | "PRO" | "SCHOOL";
+export type Role = "USER" | "ADMIN";
 
 export interface User {
   id: string;
   name: string | null;
   email: string;
   plan: Plan;
+  role: Role;
   createdAt: Date;
 }
 

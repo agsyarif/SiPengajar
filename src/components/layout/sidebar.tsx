@@ -16,6 +16,8 @@ import {
   ChevronRight,
   GitBranch,
   X,
+  ShieldCheck,
+  Users,
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -30,8 +32,16 @@ const navItems = [
   { href: "/modul", label: "Semua Modul", icon: FileText },
   { href: "/template", label: "Template Modul Ajar", icon: BookOpen },
   { href: "/template/atp", label: "ATP & TP per CP", icon: GitBranch },
+];
+
+const bottomNavItems = [
   { href: "/billing", label: "Billing", icon: CreditCard },
   { href: "/pengaturan", label: "Pengaturan", icon: Settings },
+];
+
+const adminNavItems = [
+  { href: "/admin", label: "Admin Overview", icon: ShieldCheck, exact: true },
+  { href: "/admin/users", label: "Manage Users", icon: Users, exact: false },
 ];
 
 interface SidebarProps {
@@ -43,6 +53,7 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const isPro = (session?.user as { plan?: string })?.plan === "PRO";
+  const isAdmin = (session?.user as { role?: string })?.role === "ADMIN";
 
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -92,6 +103,46 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
 
   const desktopW = !mounted ? W_EXPANDED : collapsed ? W_COLLAPSED : W_EXPANDED;
 
+  const renderNavItem = (item: { href: string; label: string; icon: React.ElementType; exact?: boolean }) => {
+    const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        onClick={handleNavClick}
+        title={collapsed && !isMobile ? item.label : undefined}
+        className={cn(
+          "nav-item relative",
+          active && "active",
+          collapsed && !isMobile && "justify-center px-2",
+        )}
+      >
+        {active && (
+          <motion.div
+            layoutId="sidebar-active"
+            className="absolute inset-0 bg-teal-50 rounded-md -z-10"
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          />
+        )}
+        <item.icon size={15} className="shrink-0" />
+        <AnimatePresence initial={false}>
+          {(!collapsed || isMobile) && (
+            <motion.span
+              key={`nav-${item.href}`}
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: "auto" }}
+              exit={{ opacity: 0, width: 0 }}
+              transition={{ duration: 0.15 }}
+              className="whitespace-nowrap overflow-hidden"
+            >
+              {item.label}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </Link>
+    );
+  };
+
   return (
     <motion.aside
       animate={
@@ -103,7 +154,7 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
       transition={{ type: "spring", stiffness: 380, damping: 32 }}
       className="fixed left-0 top-0 h-full bg-stone-50 dark:bg-[#222220] border-r border-stone-200 flex flex-col z-40 overflow-visible"
     >
-      {/* ── Floating collapse toggle — sits on the border line ── */}
+      {/* ── Floating collapse toggle ── */}
       {!isMobile && (
         <button
           onClick={toggle}
@@ -146,7 +197,6 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
           </AnimatePresence>
         </Link>
 
-        {/* Mobile: close button only */}
         {isMobile && (
           <button
             onClick={onMobileClose}
@@ -188,45 +238,43 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
 
       {/* ── Nav ── */}
       <nav className="flex-1 px-2 space-y-0.5 overflow-x-hidden overflow-y-auto">
-        {navItems.map((item) => {
-          const active = pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={handleNavClick}
-              title={collapsed && !isMobile ? item.label : undefined}
-              className={cn(
-                "nav-item relative",
-                active && "active",
-                collapsed && !isMobile && "justify-center px-2",
-              )}
-            >
-              {active && (
-                <motion.div
-                  layoutId="sidebar-active"
-                  className="absolute inset-0 bg-teal-50 rounded-md -z-10"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
-              <item.icon size={15} className="shrink-0" />
-              <AnimatePresence initial={false}>
-                {(!collapsed || isMobile) && (
-                  <motion.span
-                    key={`nav-${item.href}`}
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "auto" }}
-                    exit={{ opacity: 0, width: 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="whitespace-nowrap overflow-hidden"
-                  >
-                    {item.label}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Link>
-          );
-        })}
+        {/* Main nav items */}
+        {navItems.map(renderNavItem)}
+
+        {/* ── Admin section (only for ADMIN role) ── */}
+        {isAdmin && (
+          <>
+            {/* Divider */}
+            <div className={cn("py-2", collapsed && !isMobile ? "px-2" : "px-1")}>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 h-px bg-stone-200" />
+                <AnimatePresence initial={false}>
+                  {(!collapsed || isMobile) && (
+                    <motion.span
+                      key="admin-label"
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="text-2xs font-semibold text-stone-400 uppercase tracking-widest whitespace-nowrap overflow-hidden"
+                    >
+                      Admin
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                <div className="flex-1 h-px bg-stone-200" />
+              </div>
+            </div>
+
+            {/* Admin nav items */}
+            {adminNavItems.map(renderNavItem)}
+          </>
+        )}
+
+        {/* Bottom nav items (Billing, Pengaturan) */}
+        <div className="pt-1">
+          {bottomNavItems.map(renderNavItem)}
+        </div>
       </nav>
 
       {/* ── Bottom ── */}
@@ -303,7 +351,6 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
             )}
           </AnimatePresence>
 
-          {/* Collapsed: show theme toggle + logout stacked */}
           {collapsed && !isMobile && (
             <>
               <ThemeToggle />
